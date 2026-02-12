@@ -7,7 +7,6 @@
     <shownotes>T</shownotes>
     <allowquickadd>F</allowquickadd>
     <allowquicksearch>T</allowquicksearch>
-    <enablemailmerge>F</enablemailmerge>
     <enablenumbering>F</enablenumbering>
     <allowinlineediting>F</allowinlineediting>
     <allowinlinedeleting>F</allowinlinedeleting>
@@ -31,18 +30,15 @@
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_yield_theoretical">
             <label>Theoretical BF</label>
-            <fieldtype>DECIMALNUM</fieldtype>
-            <precision>4</precision>
+            <fieldtype>FLOAT</fieldtype>
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_yield_actual">
             <label>Actual BF</label>
-            <fieldtype>DECIMALNUM</fieldtype>
-            <precision>4</precision>
+            <fieldtype>FLOAT</fieldtype>
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_yield_waste">
             <label>Waste BF</label>
-            <fieldtype>DECIMALNUM</fieldtype>
-            <precision>4</precision>
+            <fieldtype>FLOAT</fieldtype>
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_yield_recovery">
             <label>Recovery %</label>

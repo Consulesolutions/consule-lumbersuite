@@ -7,7 +7,6 @@
     <shownotes>F</shownotes>
     <allowquickadd>F</allowquickadd>
     <allowquicksearch>T</allowquicksearch>
-    <enablemailmerge>F</enablemailmerge>
     <enablenumbering>F</enablenumbering>
     <allowinlineediting>F</allowinlineediting>
     <allowinlinedeleting>F</allowinlinedeleting>
@@ -38,33 +37,27 @@
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_cons_display_qty">
             <label>Display Qty</label>
-            <fieldtype>DECIMALNUM</fieldtype>
-            <precision>4</precision>
+            <fieldtype>FLOAT</fieldtype>
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_cons_calculated_bf">
             <label>Calculated BF</label>
-            <fieldtype>DECIMALNUM</fieldtype>
-            <precision>4</precision>
+            <fieldtype>FLOAT</fieldtype>
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_cons_conv_factor">
             <label>Conversion Factor</label>
-            <fieldtype>DECIMALNUM</fieldtype>
-            <precision>6</precision>
+            <fieldtype>FLOAT</fieldtype>
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_cons_thickness">
             <label>Thickness</label>
-            <fieldtype>DECIMALNUM</fieldtype>
-            <precision>3</precision>
+            <fieldtype>FLOAT</fieldtype>
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_cons_width">
             <label>Width</label>
-            <fieldtype>DECIMALNUM</fieldtype>
-            <precision>3</precision>
+            <fieldtype>FLOAT</fieldtype>
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_cons_length">
             <label>Length</label>
-            <fieldtype>DECIMALNUM</fieldtype>
-            <precision>3</precision>
+            <fieldtype>FLOAT</fieldtype>
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_cons_txn_date">
             <label>Transaction Date</label>

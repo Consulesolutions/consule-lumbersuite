@@ -1,8 +1,7 @@
 <custombodyfields>
     <transactionbodycustomfield scriptid="custbody_cls_total_bf">
         <label>Total Board Feet</label>
-        <fieldtype>DECIMALNUM</fieldtype>
-        <precision>4</precision>
+        <fieldtype>FLOAT</fieldtype>
         <description>Total calculated board feet for all lines</description>
         <storevalue>T</storevalue>
         <appliestosalesorder>T</appliestosalesorder>
@@ -30,16 +29,14 @@
     </transactionbodycustomfield>
     <transactionbodycustomfield scriptid="custbody_cls_total_theoretical_bf">
         <label>Total Theoretical BF</label>
-        <fieldtype>DECIMALNUM</fieldtype>
-        <precision>4</precision>
+        <fieldtype>FLOAT</fieldtype>
         <description>Total theoretical board feet (input)</description>
         <storevalue>T</storevalue>
         <appliestoworkorder>T</appliestoworkorder>
     </transactionbodycustomfield>
     <transactionbodycustomfield scriptid="custbody_cls_total_waste_bf">
         <label>Total Waste BF</label>
-        <fieldtype>DECIMALNUM</fieldtype>
-        <precision>4</precision>
+        <fieldtype>FLOAT</fieldtype>
         <description>Total waste board feet</description>
         <storevalue>T</storevalue>
         <appliestoworkorder>T</appliestoworkorder>

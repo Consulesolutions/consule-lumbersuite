@@ -7,7 +7,6 @@
     <shownotes>F</shownotes>
     <allowquickadd>T</allowquickadd>
     <allowquicksearch>T</allowquicksearch>
-    <enablemailmerge>F</enablemailmerge>
     <enablenumbering>F</enablenumbering>
     <allowinlineediting>T</allowinlineediting>
     <allowinlinedeleting>F</allowinlinedeleting>
@@ -16,7 +15,6 @@
             <label>Reason Code</label>
             <fieldtype>TEXT</fieldtype>
             <ismandatory>T</ismandatory>
-            <isunique>T</isunique>
             <maxlength>10</maxlength>
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_wrsn_recoverable">

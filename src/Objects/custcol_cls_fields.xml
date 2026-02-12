@@ -12,8 +12,7 @@
     </transactioncolumncustomfield>
     <transactioncolumncustomfield scriptid="custcol_cls_display_qty">
         <label>Display Qty</label>
-        <fieldtype>DECIMALNUM</fieldtype>
-        <precision>4</precision>
+        <fieldtype>FLOAT</fieldtype>
         <description>Quantity in selling UOM</description>
         <appliestosalesorder>T</appliestosalesorder>
         <appliestoestimate>T</appliestoestimate>
@@ -22,8 +21,7 @@
     </transactioncolumncustomfield>
     <transactioncolumncustomfield scriptid="custcol_cls_dim_thickness">
         <label>Thickness (in)</label>
-        <fieldtype>DECIMALNUM</fieldtype>
-        <precision>3</precision>
+        <fieldtype>FLOAT</fieldtype>
         <description>Actual thickness in inches</description>
         <appliestosalesorder>T</appliestosalesorder>
         <appliestoestimate>T</appliestoestimate>
@@ -33,8 +31,7 @@
     </transactioncolumncustomfield>
     <transactioncolumncustomfield scriptid="custcol_cls_dim_width">
         <label>Width (in)</label>
-        <fieldtype>DECIMALNUM</fieldtype>
-        <precision>3</precision>
+        <fieldtype>FLOAT</fieldtype>
         <description>Actual width in inches</description>
         <appliestosalesorder>T</appliestosalesorder>
         <appliestoestimate>T</appliestoestimate>
@@ -44,8 +41,7 @@
     </transactioncolumncustomfield>
     <transactioncolumncustomfield scriptid="custcol_cls_dim_length">
         <label>Length (ft)</label>
-        <fieldtype>DECIMALNUM</fieldtype>
-        <precision>3</precision>
+        <fieldtype>FLOAT</fieldtype>
         <description>Actual length in feet</description>
         <appliestosalesorder>T</appliestosalesorder>
         <appliestoestimate>T</appliestoestimate>
@@ -55,8 +51,7 @@
     </transactioncolumncustomfield>
     <transactioncolumncustomfield scriptid="custcol_cls_calculated_bf">
         <label>Calculated BF</label>
-        <fieldtype>DECIMALNUM</fieldtype>
-        <precision>4</precision>
+        <fieldtype>FLOAT</fieldtype>
         <description>Calculated board feet for this line</description>
         <appliestosalesorder>T</appliestosalesorder>
         <appliestoestimate>T</appliestoestimate>
@@ -67,8 +62,7 @@
     </transactioncolumncustomfield>
     <transactioncolumncustomfield scriptid="custcol_cls_conversion_factor">
         <label>Conversion Factor</label>
-        <fieldtype>DECIMALNUM</fieldtype>
-        <precision>6</precision>
+        <fieldtype>FLOAT</fieldtype>
         <description>Factor used to convert display qty to BF</description>
         <appliestosalesorder>T</appliestosalesorder>
         <appliestoestimate>T</appliestoestimate>
@@ -109,24 +103,21 @@
     </transactioncolumncustomfield>
     <transactioncolumncustomfield scriptid="custcol_cls_theoretical_bf">
         <label>Theoretical BF</label>
-        <fieldtype>DECIMALNUM</fieldtype>
-        <precision>4</precision>
+        <fieldtype>FLOAT</fieldtype>
         <description>Expected BF before processing</description>
         <appliestoworkorder>T</appliestoworkorder>
         <colcomponent>T</colcomponent>
     </transactioncolumncustomfield>
     <transactioncolumncustomfield scriptid="custcol_cls_actual_bf">
         <label>Actual BF</label>
-        <fieldtype>DECIMALNUM</fieldtype>
-        <precision>4</precision>
+        <fieldtype>FLOAT</fieldtype>
         <description>Actual BF after processing</description>
         <appliestoworkorder>T</appliestoworkorder>
         <colcomponent>T</colcomponent>
     </transactioncolumncustomfield>
     <transactioncolumncustomfield scriptid="custcol_cls_waste_bf">
         <label>Waste BF</label>
-        <fieldtype>DECIMALNUM</fieldtype>
-        <precision>4</precision>
+        <fieldtype>FLOAT</fieldtype>
         <description>Waste BF (Theoretical - Actual)</description>
         <appliestoworkorder>T</appliestoworkorder>
         <colcomponent>T</colcomponent>

@@ -7,17 +7,9 @@
     <shownotes>F</shownotes>
     <allowquickadd>F</allowquickadd>
     <allowquicksearch>F</allowquicksearch>
-    <enablemailmerge>F</enablemailmerge>
     <enablenumbering>F</enablenumbering>
     <allowinlineediting>F</allowinlineediting>
     <allowinlinedeleting>F</allowinlinedeleting>
-    <allowcopy>F</allowcopy>
-    <permissions>
-        <permission>
-            <permittedrole>[role:administrator]</permittedrole>
-            <permittedlevel>FULL</permittedlevel>
-        </permission>
-    </permissions>
     <customrecordcustomfields>
         <customrecordcustomfield scriptid="custrecord_cls_enable_yield">
             <label>Enable Yield Tracking</label>

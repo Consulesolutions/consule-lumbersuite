@@ -7,7 +7,6 @@
     <shownotes>F</shownotes>
     <allowquickadd>F</allowquickadd>
     <allowquicksearch>T</allowquicksearch>
-    <enablemailmerge>F</enablemailmerge>
     <enablenumbering>F</enablenumbering>
     <allowinlineediting>F</allowinlineediting>
     <allowinlinedeleting>F</allowinlinedeleting>
@@ -26,14 +25,12 @@
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_repout_bf">
             <label>Output BF</label>
-            <fieldtype>DECIMALNUM</fieldtype>
-            <precision>4</precision>
+            <fieldtype>FLOAT</fieldtype>
             <ismandatory>T</ismandatory>
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_repout_qty">
             <label>Output Qty</label>
-            <fieldtype>DECIMALNUM</fieldtype>
-            <precision>4</precision>
+            <fieldtype>FLOAT</fieldtype>
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_repout_new_tally">
             <label>New Tally</label>

@@ -5,9 +5,6 @@
         <features>
             <feature required="true">CUSTOMRECORDS</feature>
             <feature required="true">SERVERSIDESCRIPTING</feature>
-            <feature required="true">ADVANCEDPRINTING</feature>
-            <feature required="false">MANUFACTURING</feature>
-            <feature required="false">WORKORDERS</feature>
         </features>
     </dependencies>
 </manifest>

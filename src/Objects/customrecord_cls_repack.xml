@@ -7,7 +7,6 @@
     <shownotes>T</shownotes>
     <allowquickadd>F</allowquickadd>
     <allowquicksearch>T</allowquicksearch>
-    <enablemailmerge>F</enablemailmerge>
     <enablenumbering>T</enablenumbering>
     <numberingprefix>RPK-</numberingprefix>
     <numberingmindigits>6</numberingmindigits>
@@ -28,8 +27,7 @@
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_repack_source_bf">
             <label>Source BF</label>
-            <fieldtype>DECIMALNUM</fieldtype>
-            <precision>4</precision>
+            <fieldtype>FLOAT</fieldtype>
             <ismandatory>T</ismandatory>
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_repack_source_tally">
@@ -57,13 +55,11 @@
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_repack_yield_bf">
             <label>Yield BF</label>
-            <fieldtype>DECIMALNUM</fieldtype>
-            <precision>4</precision>
+            <fieldtype>FLOAT</fieldtype>
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_repack_waste_bf">
             <label>Waste BF</label>
-            <fieldtype>DECIMALNUM</fieldtype>
-            <precision>4</precision>
+            <fieldtype>FLOAT</fieldtype>
         </customrecordcustomfield>
     </customrecordcustomfields>
 </customrecordtype>

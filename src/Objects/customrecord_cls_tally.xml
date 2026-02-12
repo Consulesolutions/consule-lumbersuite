@@ -7,7 +7,6 @@
     <shownotes>T</shownotes>
     <allowquickadd>F</allowquickadd>
     <allowquicksearch>T</allowquicksearch>
-    <enablemailmerge>F</enablemailmerge>
     <enablenumbering>T</enablenumbering>
     <numberingprefix>TALLY-</numberingprefix>
     <numberingmindigits>6</numberingmindigits>
@@ -56,14 +55,12 @@
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_tally_received_bf">
             <label>Received BF</label>
-            <fieldtype>DECIMALNUM</fieldtype>
-            <precision>4</precision>
+            <fieldtype>FLOAT</fieldtype>
             <ismandatory>T</ismandatory>
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_tally_remaining_bf">
             <label>Remaining BF</label>
-            <fieldtype>DECIMALNUM</fieldtype>
-            <precision>4</precision>
+            <fieldtype>FLOAT</fieldtype>
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_tally_received_date">
             <label>Received Date</label>
@@ -92,18 +89,15 @@
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_tally_thickness">
             <label>Thickness (in)</label>
-            <fieldtype>DECIMALNUM</fieldtype>
-            <precision>3</precision>
+            <fieldtype>FLOAT</fieldtype>
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_tally_width">
             <label>Width (in)</label>
-            <fieldtype>DECIMALNUM</fieldtype>
-            <precision>3</precision>
+            <fieldtype>FLOAT</fieldtype>
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_tally_length">
             <label>Length (ft)</label>
-            <fieldtype>DECIMALNUM</fieldtype>
-            <precision>3</precision>
+            <fieldtype>FLOAT</fieldtype>
         </customrecordcustomfield>
         <customrecordcustomfield scriptid="custrecord_cls_tally_pieces">
             <label>Pieces</label>

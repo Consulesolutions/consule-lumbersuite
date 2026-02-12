@@ -30,8 +30,7 @@
     </itemcustomfield>
     <itemcustomfield scriptid="custitem_cls_nominal_thickness">
         <label>Nominal Thickness (in)</label>
-        <fieldtype>DECIMALNUM</fieldtype>
-        <precision>3</precision>
+        <fieldtype>FLOAT</fieldtype>
         <description>Nominal thickness in inches</description>
         <appliestoinventory>T</appliestoinventory>
         <appliestoassembly>T</appliestoassembly>
@@ -39,8 +38,7 @@
     </itemcustomfield>
     <itemcustomfield scriptid="custitem_cls_nominal_width">
         <label>Nominal Width (in)</label>
-        <fieldtype>DECIMALNUM</fieldtype>
-        <precision>3</precision>
+        <fieldtype>FLOAT</fieldtype>
         <description>Nominal width in inches</description>
         <appliestoinventory>T</appliestoinventory>
         <appliestoassembly>T</appliestoassembly>
@@ -48,8 +46,7 @@
     </itemcustomfield>
     <itemcustomfield scriptid="custitem_cls_nominal_length">
         <label>Nominal Length (ft)</label>
-        <fieldtype>DECIMALNUM</fieldtype>
-        <precision>3</precision>
+        <fieldtype>FLOAT</fieldtype>
         <description>Nominal length in feet</description>
         <appliestoinventory>T</appliestoinventory>
         <appliestoassembly>T</appliestoassembly>
