@@ -1,0 +1,13 @@
+<manifest projecttype="ACCOUNTCUSTOMIZATION">
+    <projectname>ConsuleLumberSuite</projectname>
+    <frameworkversion>1.0</frameworkversion>
+    <dependencies>
+        <features>
+            <feature required="true">CUSTOMRECORDS</feature>
+            <feature required="true">SERVERSIDESCRIPTING</feature>
+            <feature required="true">ADVANCEDPRINTING</feature>
+            <feature required="false">MANUFACTURING</feature>
+            <feature required="false">WORKORDERS</feature>
+        </features>
+    </dependencies>
+</manifest>

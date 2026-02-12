@@ -1,0 +1,19 @@
+<deploy>
+    <configuration>
+        <path>~/AccountConfiguration/*</path>
+    </configuration>
+    <files>
+        <path>~/FileCabinet/SuiteScripts/ConsuleLumberSuite/*</path>
+        <path>~/FileCabinet/SuiteScripts/ConsuleLumberSuite/control/*</path>
+        <path>~/FileCabinet/SuiteScripts/ConsuleLumberSuite/lib/*</path>
+        <path>~/FileCabinet/SuiteScripts/ConsuleLumberSuite/repack/*</path>
+        <path>~/FileCabinet/SuiteScripts/ConsuleLumberSuite/reporting/*</path>
+        <path>~/FileCabinet/SuiteScripts/ConsuleLumberSuite/sales/*</path>
+        <path>~/FileCabinet/SuiteScripts/ConsuleLumberSuite/tally/*</path>
+        <path>~/FileCabinet/SuiteScripts/ConsuleLumberSuite/workorder/*</path>
+        <path>~/FileCabinet/SuiteScripts/ConsuleLumberSuite/yield/*</path>
+    </files>
+    <objects>
+        <path>~/Objects/*</path>
+    </objects>
+</deploy>

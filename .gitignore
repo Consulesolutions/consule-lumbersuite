@@ -1,2 +1,22 @@
 .DS_Store
-.DS_Store
+
+# Dependencies
+node_modules/
+
+# SuiteCloud CLI
+.suitecloud-sdk/
+.clicache/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment files
+.env
+.env.local

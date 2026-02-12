@@ -1,0 +1,30 @@
+{
+  "name": "consule-lumbersuite",
+  "version": "1.0.0",
+  "description": "Consule LumberSuite - NetSuite SuiteScript implementation for lumber industry",
+  "main": "deploy.js",
+  "scripts": {
+    "deploy": "node deploy.js",
+    "deploy:control": "node deploy.js control",
+    "deploy:lib": "node deploy.js lib",
+    "deploy:sales": "node deploy.js sales",
+    "deploy:workorder": "node deploy.js workorder",
+    "deploy:tally": "node deploy.js tally",
+    "deploy:yield": "node deploy.js yield",
+    "deploy:repack": "node deploy.js repack",
+    "deploy:reporting": "node deploy.js reporting"
+  },
+  "keywords": [
+    "netsuite",
+    "suitescript",
+    "lumber",
+    "manufacturing"
+  ],
+  "author": "Consule",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "oauth-1.0a": "^2.2.6",
+    "crypto-js": "^4.2.0"
+  }
+}
