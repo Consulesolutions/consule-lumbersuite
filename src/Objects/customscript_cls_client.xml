@@ -1,0 +1,164 @@
+<clientscripts>
+    <!-- Settings Client Script -->
+    <clientscript scriptid="customscript_cls_settings_cs">
+        <name>CLS Settings CS</name>
+        <scriptfile>[/SuiteScripts/ConsuleLumberSuite/control/cls_settings_cs.js]</scriptfile>
+        <description>Client Script for CLS Settings record</description>
+        <isinactive>F</isinactive>
+        <notifyowner>T</notifyowner>
+        <scriptdeployments>
+            <scriptdeployment scriptid="customdeploy_cls_settings_cs">
+                <recordtype>customrecord_cls_settings</recordtype>
+                <status>RELEASED</status>
+                <isdeployed>T</isdeployed>
+                <allroles>T</allroles>
+            </scriptdeployment>
+        </scriptdeployments>
+    </clientscript>
+
+    <!-- Estimate Client Script -->
+    <clientscript scriptid="customscript_cls_estimate_cs">
+        <name>CLS Estimate CS</name>
+        <scriptfile>[/SuiteScripts/ConsuleLumberSuite/sales/cls_estimate_cs.js]</scriptfile>
+        <description>Client Script for Estimate - BF calculations</description>
+        <isinactive>F</isinactive>
+        <notifyowner>T</notifyowner>
+        <scriptdeployments>
+            <scriptdeployment scriptid="customdeploy_cls_estimate_cs">
+                <recordtype>estimate</recordtype>
+                <status>RELEASED</status>
+                <isdeployed>T</isdeployed>
+                <allroles>T</allroles>
+            </scriptdeployment>
+        </scriptdeployments>
+    </clientscript>
+
+    <!-- Sales Order Client Script -->
+    <clientscript scriptid="customscript_cls_salesorder_cs">
+        <name>CLS Sales Order CS</name>
+        <scriptfile>[/SuiteScripts/ConsuleLumberSuite/sales/cls_salesorder_cs.js]</scriptfile>
+        <description>Client Script for Sales Order - BF calculations</description>
+        <isinactive>F</isinactive>
+        <notifyowner>T</notifyowner>
+        <scriptdeployments>
+            <scriptdeployment scriptid="customdeploy_cls_salesorder_cs">
+                <recordtype>salesorder</recordtype>
+                <status>RELEASED</status>
+                <isdeployed>T</isdeployed>
+                <allroles>T</allroles>
+            </scriptdeployment>
+        </scriptdeployments>
+    </clientscript>
+
+    <!-- Work Order Client Script -->
+    <clientscript scriptid="customscript_cls_workorder_cs">
+        <name>CLS Work Order CS</name>
+        <scriptfile>[/SuiteScripts/ConsuleLumberSuite/workorder/cls_workorder_cs.js]</scriptfile>
+        <description>Client Script for Work Order</description>
+        <isinactive>F</isinactive>
+        <notifyowner>T</notifyowner>
+        <scriptdeployments>
+            <scriptdeployment scriptid="customdeploy_cls_workorder_cs">
+                <recordtype>workorder</recordtype>
+                <status>RELEASED</status>
+                <isdeployed>T</isdeployed>
+                <allroles>T</allroles>
+            </scriptdeployment>
+        </scriptdeployments>
+    </clientscript>
+
+    <!-- WO Completion Client Script -->
+    <clientscript scriptid="customscript_cls_woc_cs">
+        <name>CLS WO Completion CS</name>
+        <scriptfile>[/SuiteScripts/ConsuleLumberSuite/workorder/cls_wocompletion_cs.js]</scriptfile>
+        <description>Client Script for Work Order Completion</description>
+        <isinactive>F</isinactive>
+        <notifyowner>T</notifyowner>
+        <scriptdeployments>
+            <scriptdeployment scriptid="customdeploy_cls_woc_cs">
+                <recordtype>workordercompletion</recordtype>
+                <status>RELEASED</status>
+                <isdeployed>T</isdeployed>
+                <allroles>T</allroles>
+            </scriptdeployment>
+        </scriptdeployments>
+    </clientscript>
+
+    <!-- Tally Sheet Client Script -->
+    <clientscript scriptid="customscript_cls_tally_cs">
+        <name>CLS Tally Sheet CS</name>
+        <scriptfile>[/SuiteScripts/ConsuleLumberSuite/tally/cls_tally_sheet_cs.js]</scriptfile>
+        <description>Client Script for Tally Sheet record</description>
+        <isinactive>F</isinactive>
+        <notifyowner>T</notifyowner>
+        <scriptdeployments>
+            <scriptdeployment scriptid="customdeploy_cls_tally_cs">
+                <recordtype>customrecord_cls_tally</recordtype>
+                <status>RELEASED</status>
+                <isdeployed>T</isdeployed>
+                <allroles>T</allroles>
+            </scriptdeployment>
+        </scriptdeployments>
+    </clientscript>
+
+    <!-- Tally Allocation Client Script -->
+    <clientscript scriptid="customscript_cls_talloc_cs">
+        <name>CLS Tally Allocation CS</name>
+        <scriptfile>[/SuiteScripts/ConsuleLumberSuite/tally/cls_tally_allocation_cs.js]</scriptfile>
+        <description>Client Script for Tally Allocation Suitelet</description>
+        <isinactive>F</isinactive>
+        <notifyowner>T</notifyowner>
+    </clientscript>
+
+    <!-- Yield Analysis Client Script -->
+    <clientscript scriptid="customscript_cls_yield_analysis_cs">
+        <name>CLS Yield Analysis CS</name>
+        <scriptfile>[/SuiteScripts/ConsuleLumberSuite/yield/cls_yield_analysis_cs.js]</scriptfile>
+        <description>Client Script for Yield Analysis Suitelet</description>
+        <isinactive>F</isinactive>
+        <notifyowner>T</notifyowner>
+    </clientscript>
+
+    <!-- Yield Register Client Script -->
+    <clientscript scriptid="customscript_cls_yield_reg_cs">
+        <name>CLS Yield Register CS</name>
+        <scriptfile>[/SuiteScripts/ConsuleLumberSuite/yield/cls_yield_register_cs.js]</scriptfile>
+        <description>Client Script for Yield Register record</description>
+        <isinactive>F</isinactive>
+        <notifyowner>T</notifyowner>
+        <scriptdeployments>
+            <scriptdeployment scriptid="customdeploy_cls_yield_reg_cs">
+                <recordtype>customrecord_cls_yield_reg</recordtype>
+                <status>RELEASED</status>
+                <isdeployed>T</isdeployed>
+                <allroles>T</allroles>
+            </scriptdeployment>
+        </scriptdeployments>
+    </clientscript>
+
+    <!-- Repack Client Script -->
+    <clientscript scriptid="customscript_cls_repack_cs">
+        <name>CLS Repack CS</name>
+        <scriptfile>[/SuiteScripts/ConsuleLumberSuite/repack/cls_repack_workorder_cs.js]</scriptfile>
+        <description>Client Script for Repack Order</description>
+        <isinactive>F</isinactive>
+        <notifyowner>T</notifyowner>
+        <scriptdeployments>
+            <scriptdeployment scriptid="customdeploy_cls_repack_cs">
+                <recordtype>customrecord_cls_repack</recordtype>
+                <status>RELEASED</status>
+                <isdeployed>T</isdeployed>
+                <allroles>T</allroles>
+            </scriptdeployment>
+        </scriptdeployments>
+    </clientscript>
+
+    <!-- Control Center Client Script -->
+    <clientscript scriptid="customscript_cls_control_cs">
+        <name>CLS Control Center CS</name>
+        <scriptfile>[/SuiteScripts/ConsuleLumberSuite/control/cls_control_center_cs.js]</scriptfile>
+        <description>Client Script for Control Center Suitelet</description>
+        <isinactive>F</isinactive>
+        <notifyowner>T</notifyowner>
+    </clientscript>
+</clientscripts>

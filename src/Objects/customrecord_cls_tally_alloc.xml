@@ -1,0 +1,59 @@
+<customrecordtype scriptid="customrecord_cls_tally_alloc">
+    <recordname>CLS Tally Allocation</recordname>
+    <description>Tracks allocation of tally sheet BF to work orders</description>
+    <isinactive>F</isinactive>
+    <includename>F</includename>
+    <showid>T</showid>
+    <shownotes>F</shownotes>
+    <allowquickadd>F</allowquickadd>
+    <allowquicksearch>T</allowquicksearch>
+    <enablemailmerge>F</enablemailmerge>
+    <enablenumbering>F</enablenumbering>
+    <allowinlineediting>F</allowinlineediting>
+    <allowinlinedeleting>F</allowinlinedeleting>
+    <customrecordcustomfields>
+        <customrecordcustomfield scriptid="custrecord_cls_talloc_tally">
+            <label>Tally Sheet</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>[scriptid=customrecord_cls_tally]</selectrecordtype>
+            <ismandatory>T</ismandatory>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_talloc_wo">
+            <label>Work Order</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>-30</selectrecordtype>
+            <ismandatory>T</ismandatory>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_talloc_allocated_bf">
+            <label>Allocated BF</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>4</precision>
+            <ismandatory>T</ismandatory>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_talloc_consumed_bf">
+            <label>Consumed BF</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>4</precision>
+            <defaultvalue>0</defaultvalue>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_talloc_alloc_date">
+            <label>Allocation Date</label>
+            <fieldtype>DATE</fieldtype>
+            <ismandatory>T</ismandatory>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_talloc_consume_date">
+            <label>Consumption Date</label>
+            <fieldtype>DATE</fieldtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_talloc_status">
+            <label>Status</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>[scriptid=customlist_cls_tally_alloc_status]</selectrecordtype>
+            <defaultvalue>1</defaultvalue>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_talloc_line_num">
+            <label>Line Number</label>
+            <fieldtype>INTEGER</fieldtype>
+        </customrecordcustomfield>
+    </customrecordcustomfields>
+</customrecordtype>

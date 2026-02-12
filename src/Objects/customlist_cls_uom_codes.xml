@@ -1,0 +1,36 @@
+<customlist scriptid="customlist_cls_uom_codes">
+    <name>CLS UOM Codes</name>
+    <description>Unit of Measure codes for lumber calculations</description>
+    <isinactive>F</isinactive>
+    <isordered>T</isordered>
+    <customvalues>
+        <customvalue scriptid="val_bf">
+            <value>BF - Board Feet</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_lf">
+            <value>LF - Linear Feet</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_sf">
+            <value>SF - Square Feet</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_mbf">
+            <value>MBF - Thousand Board Feet</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_msf">
+            <value>MSF - Thousand Square Feet</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_each">
+            <value>Each</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_bundle">
+            <value>Bundle</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+    </customvalues>
+</customlist>

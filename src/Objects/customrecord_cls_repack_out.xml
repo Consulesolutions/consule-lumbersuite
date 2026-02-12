@@ -1,0 +1,44 @@
+<customrecordtype scriptid="customrecord_cls_repack_out">
+    <recordname>CLS Repack Output</recordname>
+    <description>Output items produced from repack operations</description>
+    <isinactive>F</isinactive>
+    <includename>F</includename>
+    <showid>T</showid>
+    <shownotes>F</shownotes>
+    <allowquickadd>F</allowquickadd>
+    <allowquicksearch>T</allowquicksearch>
+    <enablemailmerge>F</enablemailmerge>
+    <enablenumbering>F</enablenumbering>
+    <allowinlineediting>F</allowinlineediting>
+    <allowinlinedeleting>F</allowinlinedeleting>
+    <customrecordcustomfields>
+        <customrecordcustomfield scriptid="custrecord_cls_repout_order">
+            <label>Repack Order</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>[scriptid=customrecord_cls_repack]</selectrecordtype>
+            <ismandatory>T</ismandatory>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_repout_item">
+            <label>Output Item</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>-10</selectrecordtype>
+            <ismandatory>T</ismandatory>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_repout_bf">
+            <label>Output BF</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>4</precision>
+            <ismandatory>T</ismandatory>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_repout_qty">
+            <label>Output Qty</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>4</precision>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_repout_new_tally">
+            <label>New Tally</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>[scriptid=customrecord_cls_tally]</selectrecordtype>
+        </customrecordcustomfield>
+    </customrecordcustomfields>
+</customrecordtype>

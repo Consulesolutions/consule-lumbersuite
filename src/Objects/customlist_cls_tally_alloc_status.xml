@@ -1,0 +1,20 @@
+<customlist scriptid="customlist_cls_tally_alloc_status">
+    <name>CLS Tally Allocation Status</name>
+    <description>Status values for Tally Allocation records</description>
+    <isinactive>F</isinactive>
+    <isordered>T</isordered>
+    <customvalues>
+        <customvalue scriptid="val_1">
+            <value>Allocated</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_2">
+            <value>Consumed</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_3">
+            <value>Released</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+    </customvalues>
+</customlist>

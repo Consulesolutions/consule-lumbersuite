@@ -1,0 +1,98 @@
+<customitemfields>
+    <itemcustomfield scriptid="custitem_cls_is_lumber">
+        <label>Is Lumber Item</label>
+        <fieldtype>CHECKBOX</fieldtype>
+        <defaultchecked>F</defaultchecked>
+        <description>Check if this item is a lumber product requiring BF calculations</description>
+        <appliestoinventory>T</appliestoinventory>
+        <appliestoassembly>T</appliestoassembly>
+        <appliestononinventory>T</appliestononinventory>
+        <appliestoothercharge>F</appliestoothercharge>
+        <appliestoservice>F</appliestoservice>
+    </itemcustomfield>
+    <itemcustomfield scriptid="custitem_cls_species">
+        <label>Species</label>
+        <fieldtype>SELECT</fieldtype>
+        <selectrecordtype>[scriptid=customrecord_cls_species]</selectrecordtype>
+        <description>Lumber species for this item</description>
+        <appliestoinventory>T</appliestoinventory>
+        <appliestoassembly>T</appliestoassembly>
+        <appliestononinventory>T</appliestononinventory>
+    </itemcustomfield>
+    <itemcustomfield scriptid="custitem_cls_grade">
+        <label>Grade</label>
+        <fieldtype>SELECT</fieldtype>
+        <selectrecordtype>[scriptid=customrecord_cls_grade]</selectrecordtype>
+        <description>Default lumber grade for this item</description>
+        <appliestoinventory>T</appliestoinventory>
+        <appliestoassembly>T</appliestoassembly>
+        <appliestononinventory>T</appliestononinventory>
+    </itemcustomfield>
+    <itemcustomfield scriptid="custitem_cls_nominal_thickness">
+        <label>Nominal Thickness (in)</label>
+        <fieldtype>DECIMALNUM</fieldtype>
+        <precision>3</precision>
+        <description>Nominal thickness in inches</description>
+        <appliestoinventory>T</appliestoinventory>
+        <appliestoassembly>T</appliestoassembly>
+        <appliestononinventory>T</appliestononinventory>
+    </itemcustomfield>
+    <itemcustomfield scriptid="custitem_cls_nominal_width">
+        <label>Nominal Width (in)</label>
+        <fieldtype>DECIMALNUM</fieldtype>
+        <precision>3</precision>
+        <description>Nominal width in inches</description>
+        <appliestoinventory>T</appliestoinventory>
+        <appliestoassembly>T</appliestoassembly>
+        <appliestononinventory>T</appliestononinventory>
+    </itemcustomfield>
+    <itemcustomfield scriptid="custitem_cls_nominal_length">
+        <label>Nominal Length (ft)</label>
+        <fieldtype>DECIMALNUM</fieldtype>
+        <precision>3</precision>
+        <description>Nominal length in feet</description>
+        <appliestoinventory>T</appliestoinventory>
+        <appliestoassembly>T</appliestoassembly>
+        <appliestononinventory>T</appliestononinventory>
+    </itemcustomfield>
+    <itemcustomfield scriptid="custitem_cls_base_bf_cost">
+        <label>Base BF Cost</label>
+        <fieldtype>CURRENCY</fieldtype>
+        <description>Base cost per board foot</description>
+        <appliestoinventory>T</appliestoinventory>
+        <appliestoassembly>T</appliestoassembly>
+        <appliestononinventory>T</appliestononinventory>
+    </itemcustomfield>
+    <itemcustomfield scriptid="custitem_cls_allow_dynamic_dims">
+        <label>Allow Dynamic Dimensions</label>
+        <fieldtype>CHECKBOX</fieldtype>
+        <defaultchecked>F</defaultchecked>
+        <description>Allow users to enter custom dimensions on transactions</description>
+        <appliestoinventory>T</appliestoinventory>
+        <appliestoassembly>T</appliestoassembly>
+        <appliestononinventory>T</appliestononinventory>
+    </itemcustomfield>
+    <itemcustomfield scriptid="custitem_cls_default_yield_pct">
+        <label>Default Yield %</label>
+        <fieldtype>PERCENT</fieldtype>
+        <defaultvalue>95</defaultvalue>
+        <description>Expected yield percentage for this item</description>
+        <appliestoinventory>T</appliestoinventory>
+        <appliestoassembly>T</appliestoassembly>
+    </itemcustomfield>
+    <itemcustomfield scriptid="custitem_cls_default_waste_pct">
+        <label>Default Waste %</label>
+        <fieldtype>PERCENT</fieldtype>
+        <defaultvalue>5</defaultvalue>
+        <description>Expected waste percentage for this item</description>
+        <appliestoinventory>T</appliestoinventory>
+        <appliestoassembly>T</appliestoassembly>
+    </itemcustomfield>
+    <itemcustomfield scriptid="custitem_cls_pieces_per_bundle">
+        <label>Pieces Per Bundle</label>
+        <fieldtype>INTEGER</fieldtype>
+        <description>Number of pieces per bundle for this item</description>
+        <appliestoinventory>T</appliestoinventory>
+        <appliestoassembly>T</appliestoassembly>
+    </itemcustomfield>
+</customitemfields>

@@ -1,0 +1,38 @@
+<customrecordtype scriptid="customrecord_cls_species">
+    <recordname>CLS Species</recordname>
+    <description>Lumber species definitions for board feet calculations</description>
+    <isinactive>F</isinactive>
+    <includename>T</includename>
+    <showid>T</showid>
+    <shownotes>T</shownotes>
+    <allowquickadd>T</allowquickadd>
+    <allowquicksearch>T</allowquicksearch>
+    <enablemailmerge>F</enablemailmerge>
+    <enablenumbering>F</enablenumbering>
+    <allowinlineediting>T</allowinlineediting>
+    <allowinlinedeleting>F</allowinlinedeleting>
+    <customrecordcustomfields>
+        <customrecordcustomfield scriptid="custrecord_cls_species_code">
+            <label>Species Code</label>
+            <fieldtype>TEXT</fieldtype>
+            <ismandatory>T</ismandatory>
+            <isunique>T</isunique>
+            <maxlength>10</maxlength>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_species_density">
+            <label>Density Factor</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>4</precision>
+            <defaultvalue>1.0</defaultvalue>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_species_hardwood">
+            <label>Is Hardwood</label>
+            <fieldtype>CHECKBOX</fieldtype>
+            <defaultchecked>F</defaultchecked>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_species_desc">
+            <label>Description</label>
+            <fieldtype>TEXTAREA</fieldtype>
+        </customrecordcustomfield>
+    </customrecordcustomfields>
+</customrecordtype>

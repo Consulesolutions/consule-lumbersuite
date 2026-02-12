@@ -1,0 +1,24 @@
+<customlist scriptid="customlist_cls_tally_status">
+    <name>CLS Tally Status</name>
+    <description>Status values for Tally Sheet records</description>
+    <isinactive>F</isinactive>
+    <isordered>T</isordered>
+    <customvalues>
+        <customvalue scriptid="val_1">
+            <value>Open</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_2">
+            <value>Allocated</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_3">
+            <value>Consumed</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_4">
+            <value>Closed</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+    </customvalues>
+</customlist>

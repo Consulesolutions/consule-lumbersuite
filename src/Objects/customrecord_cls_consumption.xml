@@ -1,0 +1,84 @@
+<customrecordtype scriptid="customrecord_cls_consumption">
+    <recordname>CLS Consumption Log</recordname>
+    <description>Logs BF consumption from transactions for audit trail</description>
+    <isinactive>F</isinactive>
+    <includename>F</includename>
+    <showid>T</showid>
+    <shownotes>F</shownotes>
+    <allowquickadd>F</allowquickadd>
+    <allowquicksearch>T</allowquicksearch>
+    <enablemailmerge>F</enablemailmerge>
+    <enablenumbering>F</enablenumbering>
+    <allowinlineediting>F</allowinlineediting>
+    <allowinlinedeleting>F</allowinlinedeleting>
+    <customrecordcustomfields>
+        <customrecordcustomfield scriptid="custrecord_cls_cons_source_txn">
+            <label>Source Transaction</label>
+            <fieldtype>TEXT</fieldtype>
+            <maxlength>20</maxlength>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_cons_source_type">
+            <label>Source Type</label>
+            <fieldtype>TEXT</fieldtype>
+            <maxlength>10</maxlength>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_cons_source_line">
+            <label>Source Line</label>
+            <fieldtype>INTEGER</fieldtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_cons_item">
+            <label>Item</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>-10</selectrecordtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_cons_selling_uom">
+            <label>Selling UOM</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>[scriptid=customlist_cls_uom_codes]</selectrecordtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_cons_display_qty">
+            <label>Display Qty</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>4</precision>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_cons_calculated_bf">
+            <label>Calculated BF</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>4</precision>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_cons_conv_factor">
+            <label>Conversion Factor</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>6</precision>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_cons_thickness">
+            <label>Thickness</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>3</precision>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_cons_width">
+            <label>Width</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>3</precision>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_cons_length">
+            <label>Length</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>3</precision>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_cons_txn_date">
+            <label>Transaction Date</label>
+            <fieldtype>DATE</fieldtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_cons_created_by">
+            <label>Created By</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>-4</selectrecordtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_cons_subsidiary">
+            <label>Subsidiary</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>-117</selectrecordtype>
+        </customrecordcustomfield>
+    </customrecordcustomfields>
+</customrecordtype>

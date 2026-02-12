@@ -1,0 +1,113 @@
+<customrecordtype scriptid="customrecord_cls_tally">
+    <recordname>CLS Tally Sheet</recordname>
+    <description>Tally sheet for tracking lumber inventory by bundle/lot</description>
+    <isinactive>F</isinactive>
+    <includename>T</includename>
+    <showid>T</showid>
+    <shownotes>T</shownotes>
+    <allowquickadd>F</allowquickadd>
+    <allowquicksearch>T</allowquicksearch>
+    <enablemailmerge>F</enablemailmerge>
+    <enablenumbering>T</enablenumbering>
+    <numberingprefix>TALLY-</numberingprefix>
+    <numberingmindigits>6</numberingmindigits>
+    <allowinlineediting>F</allowinlineediting>
+    <allowinlinedeleting>F</allowinlinedeleting>
+    <customrecordcustomfields>
+        <customrecordcustomfield scriptid="custrecord_cls_tally_item">
+            <label>Item</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>-10</selectrecordtype>
+            <ismandatory>T</ismandatory>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_tally_vendor">
+            <label>Vendor</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>-3</selectrecordtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_tally_item_receipt">
+            <label>Item Receipt</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>-31</selectrecordtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_tally_vendor_lot">
+            <label>Vendor Lot #</label>
+            <fieldtype>TEXT</fieldtype>
+            <maxlength>50</maxlength>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_tally_bundle_id">
+            <label>Bundle ID</label>
+            <fieldtype>TEXT</fieldtype>
+            <maxlength>50</maxlength>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_tally_moisture">
+            <label>Moisture %</label>
+            <fieldtype>PERCENT</fieldtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_tally_grade">
+            <label>Grade</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>[scriptid=customrecord_cls_grade]</selectrecordtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_tally_origin">
+            <label>Origin</label>
+            <fieldtype>TEXT</fieldtype>
+            <maxlength>100</maxlength>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_tally_received_bf">
+            <label>Received BF</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>4</precision>
+            <ismandatory>T</ismandatory>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_tally_remaining_bf">
+            <label>Remaining BF</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>4</precision>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_tally_received_date">
+            <label>Received Date</label>
+            <fieldtype>DATE</fieldtype>
+            <ismandatory>T</ismandatory>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_tally_location">
+            <label>Location</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>-103</selectrecordtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_tally_subsidiary">
+            <label>Subsidiary</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>-117</selectrecordtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_tally_status">
+            <label>Status</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>[scriptid=customlist_cls_tally_status]</selectrecordtype>
+            <defaultvalue>1</defaultvalue>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_tally_notes">
+            <label>Notes</label>
+            <fieldtype>TEXTAREA</fieldtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_tally_thickness">
+            <label>Thickness (in)</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>3</precision>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_tally_width">
+            <label>Width (in)</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>3</precision>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_tally_length">
+            <label>Length (ft)</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>3</precision>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_tally_pieces">
+            <label>Pieces</label>
+            <fieldtype>INTEGER</fieldtype>
+        </customrecordcustomfield>
+    </customrecordcustomfields>
+</customrecordtype>

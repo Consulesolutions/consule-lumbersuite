@@ -1,0 +1,33 @@
+<customrecordtype scriptid="customrecord_cls_waste_rsn">
+    <recordname>CLS Waste Reason</recordname>
+    <description>Waste reason codes for yield tracking</description>
+    <isinactive>F</isinactive>
+    <includename>T</includename>
+    <showid>T</showid>
+    <shownotes>F</shownotes>
+    <allowquickadd>T</allowquickadd>
+    <allowquicksearch>T</allowquicksearch>
+    <enablemailmerge>F</enablemailmerge>
+    <enablenumbering>F</enablenumbering>
+    <allowinlineediting>T</allowinlineediting>
+    <allowinlinedeleting>F</allowinlinedeleting>
+    <customrecordcustomfields>
+        <customrecordcustomfield scriptid="custrecord_cls_wrsn_code">
+            <label>Reason Code</label>
+            <fieldtype>TEXT</fieldtype>
+            <ismandatory>T</ismandatory>
+            <isunique>T</isunique>
+            <maxlength>10</maxlength>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_wrsn_recoverable">
+            <label>Is Recoverable</label>
+            <fieldtype>CHECKBOX</fieldtype>
+            <defaultchecked>F</defaultchecked>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_wrsn_recovery_pct">
+            <label>Default Recovery %</label>
+            <fieldtype>PERCENT</fieldtype>
+            <defaultvalue>0</defaultvalue>
+        </customrecordcustomfield>
+    </customrecordcustomfields>
+</customrecordtype>

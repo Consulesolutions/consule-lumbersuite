@@ -1,0 +1,34 @@
+<customrecordtype scriptid="customrecord_cls_uom_type">
+    <recordname>CLS UOM Type</recordname>
+    <description>Unit of Measure type definitions for lumber conversion</description>
+    <isinactive>F</isinactive>
+    <includename>T</includename>
+    <showid>T</showid>
+    <shownotes>F</shownotes>
+    <allowquickadd>T</allowquickadd>
+    <allowquicksearch>T</allowquicksearch>
+    <enablemailmerge>F</enablemailmerge>
+    <enablenumbering>F</enablenumbering>
+    <allowinlineediting>T</allowinlineediting>
+    <allowinlinedeleting>F</allowinlinedeleting>
+    <customrecordcustomfields>
+        <customrecordcustomfield scriptid="custrecord_cls_uom_code">
+            <label>UOM Code</label>
+            <fieldtype>TEXT</fieldtype>
+            <ismandatory>T</ismandatory>
+            <isunique>T</isunique>
+            <maxlength>10</maxlength>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_uom_base_factor">
+            <label>Base Conversion Factor</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>6</precision>
+            <defaultvalue>1.0</defaultvalue>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_uom_requires_dims">
+            <label>Requires Dimensions</label>
+            <fieldtype>CHECKBOX</fieldtype>
+            <defaultchecked>T</defaultchecked>
+        </customrecordcustomfield>
+    </customrecordcustomfields>
+</customrecordtype>

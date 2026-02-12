@@ -1,0 +1,98 @@
+<customrecordtype scriptid="customrecord_cls_settings">
+    <recordname>CLS Settings</recordname>
+    <description>Consule LumberSuite configuration settings</description>
+    <isinactive>F</isinactive>
+    <includename>T</includename>
+    <showid>F</showid>
+    <shownotes>F</shownotes>
+    <allowquickadd>F</allowquickadd>
+    <allowquicksearch>F</allowquicksearch>
+    <enablemailmerge>F</enablemailmerge>
+    <enablenumbering>F</enablenumbering>
+    <allowinlineediting>F</allowinlineediting>
+    <allowinlinedeleting>F</allowinlinedeleting>
+    <allowcopy>F</allowcopy>
+    <permissions>
+        <permission>
+            <permittedrole>[role:administrator]</permittedrole>
+            <permittedlevel>FULL</permittedlevel>
+        </permission>
+    </permissions>
+    <customrecordcustomfields>
+        <customrecordcustomfield scriptid="custrecord_cls_enable_yield">
+            <label>Enable Yield Tracking</label>
+            <fieldtype>CHECKBOX</fieldtype>
+            <defaultchecked>T</defaultchecked>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_enable_waste">
+            <label>Enable Waste Tracking</label>
+            <fieldtype>CHECKBOX</fieldtype>
+            <defaultchecked>T</defaultchecked>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_enable_tally">
+            <label>Enable Tally Management</label>
+            <fieldtype>CHECKBOX</fieldtype>
+            <defaultchecked>T</defaultchecked>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_enable_repack">
+            <label>Enable Repack Processing</label>
+            <fieldtype>CHECKBOX</fieldtype>
+            <defaultchecked>F</defaultchecked>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_enable_dynamic_uom">
+            <label>Enable Dynamic UOM</label>
+            <fieldtype>CHECKBOX</fieldtype>
+            <defaultchecked>T</defaultchecked>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_enable_grade">
+            <label>Enable Grade Tracking</label>
+            <fieldtype>CHECKBOX</fieldtype>
+            <defaultchecked>T</defaultchecked>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_enable_moisture">
+            <label>Enable Moisture Tracking</label>
+            <fieldtype>CHECKBOX</fieldtype>
+            <defaultchecked>F</defaultchecked>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_allow_wo_override">
+            <label>Allow WO Override</label>
+            <fieldtype>CHECKBOX</fieldtype>
+            <defaultchecked>F</defaultchecked>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_enable_adv_report">
+            <label>Enable Advanced Reporting</label>
+            <fieldtype>CHECKBOX</fieldtype>
+            <defaultchecked>F</defaultchecked>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_default_yield">
+            <label>Default Yield %</label>
+            <fieldtype>PERCENT</fieldtype>
+            <defaultvalue>95</defaultvalue>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_default_waste">
+            <label>Default Waste %</label>
+            <fieldtype>PERCENT</fieldtype>
+            <defaultvalue>5</defaultvalue>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_bf_precision">
+            <label>BF Precision</label>
+            <fieldtype>INTEGER</fieldtype>
+            <defaultvalue>4</defaultvalue>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_enforce_tally_fifo">
+            <label>Enforce Tally FIFO</label>
+            <fieldtype>CHECKBOX</fieldtype>
+            <defaultchecked>T</defaultchecked>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_auto_create_tally">
+            <label>Auto Create Tally</label>
+            <fieldtype>CHECKBOX</fieldtype>
+            <defaultchecked>F</defaultchecked>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_require_dimensions">
+            <label>Require Dimensions</label>
+            <fieldtype>CHECKBOX</fieldtype>
+            <defaultchecked>T</defaultchecked>
+        </customrecordcustomfield>
+    </customrecordcustomfields>
+</customrecordtype>

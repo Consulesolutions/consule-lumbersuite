@@ -1,0 +1,69 @@
+<customrecordtype scriptid="customrecord_cls_repack">
+    <recordname>CLS Repack Order</recordname>
+    <description>Tracks repack operations for lumber conversion</description>
+    <isinactive>F</isinactive>
+    <includename>T</includename>
+    <showid>T</showid>
+    <shownotes>T</shownotes>
+    <allowquickadd>F</allowquickadd>
+    <allowquicksearch>T</allowquicksearch>
+    <enablemailmerge>F</enablemailmerge>
+    <enablenumbering>T</enablenumbering>
+    <numberingprefix>RPK-</numberingprefix>
+    <numberingmindigits>6</numberingmindigits>
+    <allowinlineediting>F</allowinlineediting>
+    <allowinlinedeleting>F</allowinlinedeleting>
+    <customrecordcustomfields>
+        <customrecordcustomfield scriptid="custrecord_cls_repack_status">
+            <label>Status</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>[scriptid=customlist_cls_repack_status]</selectrecordtype>
+            <defaultvalue>1</defaultvalue>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_repack_source_item">
+            <label>Source Item</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>-10</selectrecordtype>
+            <ismandatory>T</ismandatory>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_repack_source_bf">
+            <label>Source BF</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>4</precision>
+            <ismandatory>T</ismandatory>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_repack_source_tally">
+            <label>Source Tally</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>[scriptid=customrecord_cls_tally]</selectrecordtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_repack_location">
+            <label>Location</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>-103</selectrecordtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_repack_subsidiary">
+            <label>Subsidiary</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>-117</selectrecordtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_repack_complete_date">
+            <label>Completion Date</label>
+            <fieldtype>DATE</fieldtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_repack_notes">
+            <label>Notes</label>
+            <fieldtype>TEXTAREA</fieldtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_repack_yield_bf">
+            <label>Yield BF</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>4</precision>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_repack_waste_bf">
+            <label>Waste BF</label>
+            <fieldtype>DECIMALNUM</fieldtype>
+            <precision>4</precision>
+        </customrecordcustomfield>
+    </customrecordcustomfields>
+</customrecordtype>

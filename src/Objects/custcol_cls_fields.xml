@@ -1,0 +1,168 @@
+<customcolumnfields>
+    <transactioncolumncustomfield scriptid="custcol_cls_selling_uom">
+        <label>Selling UOM</label>
+        <fieldtype>SELECT</fieldtype>
+        <selectrecordtype>[scriptid=customlist_cls_uom_codes]</selectrecordtype>
+        <description>Unit of measure for display/selling</description>
+        <appliestosalesorder>T</appliestosalesorder>
+        <appliestoestimate>T</appliestoestimate>
+        <appliestoinvoice>T</appliestoinvoice>
+        <appliestoitemfulfillment>T</appliestoitemfulfillment>
+        <colitem>T</colitem>
+    </transactioncolumncustomfield>
+    <transactioncolumncustomfield scriptid="custcol_cls_display_qty">
+        <label>Display Qty</label>
+        <fieldtype>DECIMALNUM</fieldtype>
+        <precision>4</precision>
+        <description>Quantity in selling UOM</description>
+        <appliestosalesorder>T</appliestosalesorder>
+        <appliestoestimate>T</appliestoestimate>
+        <appliestoinvoice>T</appliestoinvoice>
+        <colitem>T</colitem>
+    </transactioncolumncustomfield>
+    <transactioncolumncustomfield scriptid="custcol_cls_dim_thickness">
+        <label>Thickness (in)</label>
+        <fieldtype>DECIMALNUM</fieldtype>
+        <precision>3</precision>
+        <description>Actual thickness in inches</description>
+        <appliestosalesorder>T</appliestosalesorder>
+        <appliestoestimate>T</appliestoestimate>
+        <appliestoworkorder>T</appliestoworkorder>
+        <colitem>T</colitem>
+        <colcomponent>T</colcomponent>
+    </transactioncolumncustomfield>
+    <transactioncolumncustomfield scriptid="custcol_cls_dim_width">
+        <label>Width (in)</label>
+        <fieldtype>DECIMALNUM</fieldtype>
+        <precision>3</precision>
+        <description>Actual width in inches</description>
+        <appliestosalesorder>T</appliestosalesorder>
+        <appliestoestimate>T</appliestoestimate>
+        <appliestoworkorder>T</appliestoworkorder>
+        <colitem>T</colitem>
+        <colcomponent>T</colcomponent>
+    </transactioncolumncustomfield>
+    <transactioncolumncustomfield scriptid="custcol_cls_dim_length">
+        <label>Length (ft)</label>
+        <fieldtype>DECIMALNUM</fieldtype>
+        <precision>3</precision>
+        <description>Actual length in feet</description>
+        <appliestosalesorder>T</appliestosalesorder>
+        <appliestoestimate>T</appliestoestimate>
+        <appliestoworkorder>T</appliestoworkorder>
+        <colitem>T</colitem>
+        <colcomponent>T</colcomponent>
+    </transactioncolumncustomfield>
+    <transactioncolumncustomfield scriptid="custcol_cls_calculated_bf">
+        <label>Calculated BF</label>
+        <fieldtype>DECIMALNUM</fieldtype>
+        <precision>4</precision>
+        <description>Calculated board feet for this line</description>
+        <appliestosalesorder>T</appliestosalesorder>
+        <appliestoestimate>T</appliestoestimate>
+        <appliestoworkorder>T</appliestoworkorder>
+        <appliestoinvoice>T</appliestoinvoice>
+        <appliestoitemfulfillment>T</appliestoitemfulfillment>
+        <colitem>T</colitem>
+    </transactioncolumncustomfield>
+    <transactioncolumncustomfield scriptid="custcol_cls_conversion_factor">
+        <label>Conversion Factor</label>
+        <fieldtype>DECIMALNUM</fieldtype>
+        <precision>6</precision>
+        <description>Factor used to convert display qty to BF</description>
+        <appliestosalesorder>T</appliestosalesorder>
+        <appliestoestimate>T</appliestoestimate>
+        <colitem>T</colitem>
+    </transactioncolumncustomfield>
+    <transactioncolumncustomfield scriptid="custcol_cls_bf_unit_cost">
+        <label>BF Unit Cost</label>
+        <fieldtype>CURRENCY</fieldtype>
+        <description>Cost per board foot</description>
+        <appliestosalesorder>T</appliestosalesorder>
+        <appliestoestimate>T</appliestoestimate>
+        <colitem>T</colitem>
+    </transactioncolumncustomfield>
+    <transactioncolumncustomfield scriptid="custcol_cls_extended_bf_cost">
+        <label>Extended BF Cost</label>
+        <fieldtype>CURRENCY</fieldtype>
+        <description>Total cost (BF x Unit Cost)</description>
+        <appliestosalesorder>T</appliestosalesorder>
+        <appliestoestimate>T</appliestoestimate>
+        <colitem>T</colitem>
+    </transactioncolumncustomfield>
+    <transactioncolumncustomfield scriptid="custcol_cls_grade_override">
+        <label>Grade Override</label>
+        <fieldtype>SELECT</fieldtype>
+        <selectrecordtype>[scriptid=customrecord_cls_grade]</selectrecordtype>
+        <description>Override item default grade for this line</description>
+        <appliestosalesorder>T</appliestosalesorder>
+        <appliestoestimate>T</appliestoestimate>
+        <colitem>T</colitem>
+    </transactioncolumncustomfield>
+    <transactioncolumncustomfield scriptid="custcol_cls_tally_allocation">
+        <label>Tally Allocation</label>
+        <fieldtype>SELECT</fieldtype>
+        <selectrecordtype>[scriptid=customrecord_cls_tally_alloc]</selectrecordtype>
+        <description>Linked tally allocation</description>
+        <appliestoworkorder>T</appliestoworkorder>
+        <colcomponent>T</colcomponent>
+    </transactioncolumncustomfield>
+    <transactioncolumncustomfield scriptid="custcol_cls_theoretical_bf">
+        <label>Theoretical BF</label>
+        <fieldtype>DECIMALNUM</fieldtype>
+        <precision>4</precision>
+        <description>Expected BF before processing</description>
+        <appliestoworkorder>T</appliestoworkorder>
+        <colcomponent>T</colcomponent>
+    </transactioncolumncustomfield>
+    <transactioncolumncustomfield scriptid="custcol_cls_actual_bf">
+        <label>Actual BF</label>
+        <fieldtype>DECIMALNUM</fieldtype>
+        <precision>4</precision>
+        <description>Actual BF after processing</description>
+        <appliestoworkorder>T</appliestoworkorder>
+        <colcomponent>T</colcomponent>
+    </transactioncolumncustomfield>
+    <transactioncolumncustomfield scriptid="custcol_cls_waste_bf">
+        <label>Waste BF</label>
+        <fieldtype>DECIMALNUM</fieldtype>
+        <precision>4</precision>
+        <description>Waste BF (Theoretical - Actual)</description>
+        <appliestoworkorder>T</appliestoworkorder>
+        <colcomponent>T</colcomponent>
+    </transactioncolumncustomfield>
+    <transactioncolumncustomfield scriptid="custcol_cls_yield_pct">
+        <label>Yield %</label>
+        <fieldtype>PERCENT</fieldtype>
+        <description>Yield percentage (Actual/Theoretical)</description>
+        <appliestoworkorder>T</appliestoworkorder>
+        <colcomponent>T</colcomponent>
+    </transactioncolumncustomfield>
+    <transactioncolumncustomfield scriptid="custcol_cls_waste_reason">
+        <label>Waste Reason</label>
+        <fieldtype>SELECT</fieldtype>
+        <selectrecordtype>[scriptid=customrecord_cls_waste_rsn]</selectrecordtype>
+        <description>Reason for waste/variance</description>
+        <appliestoworkorder>T</appliestoworkorder>
+        <colcomponent>T</colcomponent>
+    </transactioncolumncustomfield>
+    <transactioncolumncustomfield scriptid="custcol_cls_moisture_pct">
+        <label>Moisture %</label>
+        <fieldtype>PERCENT</fieldtype>
+        <description>Moisture content percentage</description>
+        <appliestosalesorder>T</appliestosalesorder>
+        <appliestoworkorder>T</appliestoworkorder>
+        <colitem>T</colitem>
+        <colcomponent>T</colcomponent>
+    </transactioncolumncustomfield>
+    <transactioncolumncustomfield scriptid="custcol_cls_pieces_count">
+        <label>Pieces Count</label>
+        <fieldtype>INTEGER</fieldtype>
+        <description>Number of pieces</description>
+        <appliestosalesorder>T</appliestosalesorder>
+        <appliestoestimate>T</appliestoestimate>
+        <appliestoworkorder>T</appliestoworkorder>
+        <colitem>T</colitem>
+        <colcomponent>T</colcomponent>
+    </transactioncolumncustomfield>
+</customcolumnfields>

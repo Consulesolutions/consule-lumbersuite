@@ -1,0 +1,24 @@
+<customlist scriptid="customlist_cls_repack_status">
+    <name>CLS Repack Status</name>
+    <description>Status values for Repack Order records</description>
+    <isinactive>F</isinactive>
+    <isordered>T</isordered>
+    <customvalues>
+        <customvalue scriptid="val_1">
+            <value>Pending</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_2">
+            <value>In Progress</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_3">
+            <value>Complete</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_4">
+            <value>Cancelled</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+    </customvalues>
+</customlist>
