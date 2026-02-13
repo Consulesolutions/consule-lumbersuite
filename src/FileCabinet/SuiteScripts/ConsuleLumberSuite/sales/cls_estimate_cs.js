@@ -4,14 +4,7 @@
  * @NModuleScope SameAccount
  *
  * Consule LumberSuite™ - Estimate Client Script
- * Provides real-time BF calculations and UOM conversion on Estimates
- *
- * Key Functions:
- * - Real-time BF calculation as fields change
- * - Dynamic UOM selection with conversion preview
- * - Dimension override handling
- * - Price per BF calculation
- * - Margin preview
+ * Real-time BF conversion and pricing for lumber estimates
  *
  * @copyright Consule LLC
  * @author Consule Development Team
@@ -23,22 +16,14 @@ define([
     'N/ui/dialog',
     'N/ui/message',
     '../lib/cls_constants',
-    '../lib/cls_settings_dao',
-    '../lib/cls_conversion_engine',
-    '../lib/cls_dimension_resolver',
-    '../lib/cls_bf_calculator',
-    '../lib/cls_validation'
+    '../lib/cls_bf_calculator'
 ], (
     currentRecord,
     search,
     dialog,
     message,
     Constants,
-    SettingsDAO,
-    ConversionEngine,
-    DimensionResolver,
-    BFCalculator,
-    Validation
+    BFCalculator
 ) => {
 
     const LINE_FIELDS = Constants.LINE_FIELDS;
@@ -46,742 +31,199 @@ define([
     const BODY_FIELDS = Constants.BODY_FIELDS;
     const UOM_CODES = Constants.UOM_CODES;
     const PRECISION = Constants.PRECISION;
+    const DEFAULTS = Constants.DEFAULTS;
 
-    // Cache for item data
     const itemCache = {};
-
-    // Flag to prevent recursive field changes
+    let settingsCache = null;
     let isCalculating = false;
 
-    /**
-     * pageInit - Initialize the form
-     *
-     * @param {Object} context
-     */
+    const getSettings = () => {
+        if (settingsCache) return settingsCache;
+        try {
+            const settingsSearch = search.create({
+                type: 'customrecord_cls_settings',
+                filters: [],
+                columns: ['custrecord_cls_enable_dynamic_uom', 'custrecord_cls_bf_precision']
+            });
+            settingsCache = { isDynamicUomEnabled: true, bfPrecision: DEFAULTS.BF_PRECISION };
+            settingsSearch.run().each((result) => {
+                settingsCache.isDynamicUomEnabled = result.getValue('custrecord_cls_enable_dynamic_uom') === true;
+                settingsCache.bfPrecision = parseInt(result.getValue('custrecord_cls_bf_precision'), 10) || DEFAULTS.BF_PRECISION;
+                return false;
+            });
+            return settingsCache;
+        } catch (e) {
+            return { isDynamicUomEnabled: true, bfPrecision: DEFAULTS.BF_PRECISION };
+        }
+    };
+
+    const convertToBoardFeet = (params) => {
+        const { sourceUom, sourceQty, thickness, width, length, piecesPerBundle = 1 } = params;
+        const settings = getSettings();
+        const qty = parseFloat(sourceQty) || 0;
+        const t = parseFloat(thickness) || 0;
+        const w = parseFloat(width) || 0;
+        const l = parseFloat(length) || 0;
+        const ppb = parseInt(piecesPerBundle, 10) || 1;
+
+        if (qty <= 0) return { boardFeet: 0, conversionFactor: 0, isValid: true };
+
+        let boardFeet = 0, conversionFactor = 1;
+        switch (sourceUom) {
+            case UOM_CODES.BOARD_FEET: boardFeet = qty; break;
+            case UOM_CODES.LINEAR_FEET:
+                if (t <= 0 || w <= 0) return { boardFeet: 0, conversionFactor: 0, isValid: false };
+                conversionFactor = (t * w) / 12; boardFeet = qty * conversionFactor; break;
+            case UOM_CODES.SQUARE_FEET:
+                if (t <= 0) return { boardFeet: 0, conversionFactor: 0, isValid: false };
+                conversionFactor = t / 12; boardFeet = qty * conversionFactor; break;
+            case UOM_CODES.MBF: conversionFactor = 1000; boardFeet = qty * conversionFactor; break;
+            case UOM_CODES.MSF:
+                if (t <= 0) return { boardFeet: 0, conversionFactor: 0, isValid: false };
+                conversionFactor = (t / 12) * 1000; boardFeet = qty * conversionFactor; break;
+            case UOM_CODES.EACH:
+                if (t <= 0 || w <= 0 || l <= 0) return { boardFeet: 0, conversionFactor: 0, isValid: false };
+                conversionFactor = BFCalculator.calculateBF({ thickness: t, width: w, length: l });
+                boardFeet = qty * conversionFactor; break;
+            case UOM_CODES.BUNDLE:
+                if (t <= 0 || w <= 0 || l <= 0) return { boardFeet: 0, conversionFactor: 0, isValid: false };
+                conversionFactor = BFCalculator.calculateBF({ thickness: t, width: w, length: l }) * ppb;
+                boardFeet = qty * conversionFactor; break;
+            default: return { boardFeet: 0, conversionFactor: 0, isValid: false };
+        }
+        return { boardFeet: BFCalculator.roundTo(boardFeet, settings.bfPrecision), conversionFactor: BFCalculator.roundTo(conversionFactor, PRECISION.FACTOR), isValid: true };
+    };
+
     const pageInit = (context) => {
         const rec = context.currentRecord;
-        const mode = context.mode;
-
-        console.log('CLS Estimate CS: pageInit', mode);
-
         try {
-            // Check if LumberSuite is enabled
-            if (!SettingsDAO.isDynamicUomEnabled()) {
-                console.log('CLS Estimate CS: Dynamic UOM disabled');
-                return;
-            }
-
-            // Show status message
-            showModuleStatus();
-
-            // Calculate totals on load for edit mode
-            if (mode === 'edit') {
-                calculateTotals(rec);
-            }
-
-        } catch (e) {
-            console.error('CLS Estimate CS: pageInit error', e);
-        }
+            if (!getSettings().isDynamicUomEnabled) return;
+            message.create({ title: 'LumberSuite Active', message: 'Dynamic UOM conversion enabled', type: message.Type.INFORMATION }).show({ duration: 5000 });
+            if (context.mode === 'edit') calculateTotalBF(rec);
+        } catch (e) { console.error('pageInit error', e); }
     };
 
-    /**
-     * Show module status message
-     */
-    const showModuleStatus = () => {
-        try {
-            const msg = message.create({
-                title: 'LumberSuite Active',
-                message: 'BF conversion enabled. Select a Selling UOM and enter dimensions for lumber items.',
-                type: message.Type.INFORMATION
-            });
-            msg.show({ duration: 5000 });
-        } catch (e) {
-            // Silent fail
-        }
-    };
-
-    /**
-     * fieldChanged - Handle field changes
-     *
-     * @param {Object} context
-     */
     const fieldChanged = (context) => {
         const { currentRecord: rec, sublistId, fieldId, line } = context;
-
-        if (isCalculating) return;
-
+        if (isCalculating || sublistId !== 'item') return;
+        const fields = ['item', LINE_FIELDS.SELLING_UOM, LINE_FIELDS.DISPLAY_QTY, LINE_FIELDS.DIM_THICKNESS, LINE_FIELDS.DIM_WIDTH, LINE_FIELDS.DIM_LENGTH, 'quantity', 'rate'];
+        if (!fields.includes(fieldId)) return;
+        isCalculating = true;
         try {
-            // Only process item sublist
-            if (sublistId !== 'item') {
-                return;
-            }
-
-            // List of fields that trigger recalculation
-            const triggerFields = [
-                'item',
-                LINE_FIELDS.SELLING_UOM,
-                LINE_FIELDS.DISPLAY_QTY,
-                LINE_FIELDS.DIM_THICKNESS,
-                LINE_FIELDS.DIM_WIDTH,
-                LINE_FIELDS.DIM_LENGTH,
-                'quantity',
-                'rate',
-                'amount'
-            ];
-
-            if (!triggerFields.includes(fieldId)) {
-                return;
-            }
-
-            console.log('CLS Estimate CS: fieldChanged', { fieldId, line });
-
-            isCalculating = true;
-
-            switch (fieldId) {
-                case 'item':
-                    handleItemChange(rec, line);
-                    break;
-
-                case LINE_FIELDS.SELLING_UOM:
-                    handleUOMChange(rec, line);
-                    break;
-
-                case LINE_FIELDS.DISPLAY_QTY:
-                case LINE_FIELDS.DIM_THICKNESS:
-                case LINE_FIELDS.DIM_WIDTH:
-                case LINE_FIELDS.DIM_LENGTH:
-                    calculateLineBF(rec, line);
-                    break;
-
-                case 'quantity':
-                    syncQuantityToDisplayQty(rec, line);
-                    break;
-
-                case 'rate':
-                case 'amount':
-                    calculatePricePerBF(rec, line);
-                    break;
-            }
-
-        } catch (e) {
-            console.error('CLS Estimate CS: fieldChanged error', e);
-        } finally {
-            isCalculating = false;
-        }
+            if (fieldId === 'item') handleItemChange(rec, line);
+            else if (fieldId === LINE_FIELDS.SELLING_UOM) handleUOMChange(rec, line);
+            else if ([LINE_FIELDS.DISPLAY_QTY, LINE_FIELDS.DIM_THICKNESS, LINE_FIELDS.DIM_WIDTH, LINE_FIELDS.DIM_LENGTH].includes(fieldId)) calculateLineBF(rec, line);
+            else if (fieldId === 'quantity') syncQuantity(rec);
+        } catch (e) { console.error('fieldChanged error', e); }
+        finally { isCalculating = false; }
     };
 
-    /**
-     * Handle item field change
-     *
-     * @param {Record} rec
-     * @param {number} line
-     */
     const handleItemChange = (rec, line) => {
-        const itemId = rec.getCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: 'item'
-        });
-
+        const itemId = rec.getCurrentSublistValue({ sublistId: 'item', fieldId: 'item' });
         if (!itemId) return;
-
         const itemData = getItemData(itemId);
-
-        if (!itemData.isLumber) {
-            clearLumberFields(rec);
-            return;
-        }
-
-        // Set default dimensions from item
-        setDefaultDimensions(rec, itemData);
-
-        // Set default selling UOM to BF
-        rec.setCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: LINE_FIELDS.SELLING_UOM,
-            value: UOM_CODES.BOARD_FEET,
-            ignoreFieldChange: true
-        });
-
-        // Show lumber item info
-        showItemInfo(itemData);
-
-        // Calculate BF if quantity exists
+        if (!itemData.isLumber) { clearLumberFields(rec); return; }
+        rec.setCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.DIM_THICKNESS, value: itemData.thickness || '', ignoreFieldChange: true });
+        rec.setCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.DIM_WIDTH, value: itemData.width || '', ignoreFieldChange: true });
+        rec.setCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.DIM_LENGTH, value: itemData.length || '', ignoreFieldChange: true });
+        rec.setCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.SELLING_UOM, value: UOM_CODES.BOARD_FEET, ignoreFieldChange: true });
+        if (itemData.baseBFCost > 0) try { rec.setCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.BF_UNIT_COST, value: itemData.baseBFCost, ignoreFieldChange: true }); } catch (e) {}
         calculateLineBF(rec, line);
     };
 
-    /**
-     * Set default dimensions from item data
-     */
-    const setDefaultDimensions = (rec, itemData) => {
-        if (itemData.thickness) {
-            rec.setCurrentSublistValue({
-                sublistId: 'item',
-                fieldId: LINE_FIELDS.DIM_THICKNESS,
-                value: itemData.thickness,
-                ignoreFieldChange: true
-            });
-        }
-
-        if (itemData.width) {
-            rec.setCurrentSublistValue({
-                sublistId: 'item',
-                fieldId: LINE_FIELDS.DIM_WIDTH,
-                value: itemData.width,
-                ignoreFieldChange: true
-            });
-        }
-
-        if (itemData.length) {
-            rec.setCurrentSublistValue({
-                sublistId: 'item',
-                fieldId: LINE_FIELDS.DIM_LENGTH,
-                value: itemData.length,
-                ignoreFieldChange: true
-            });
-        }
-    };
-
-    /**
-     * Show item information message
-     */
-    const showItemInfo = (itemData) => {
-        try {
-            const dims = `${itemData.thickness}" × ${itemData.width}" × ${itemData.length}'`;
-            const bfPerPiece = BFCalculator.calculateBF({
-                thickness: itemData.thickness,
-                width: itemData.width,
-                length: itemData.length
-            });
-
-            const msg = message.create({
-                title: 'Lumber Item Selected',
-                message: `Dimensions: ${dims} | BF/piece: ${BFCalculator.roundTo(bfPerPiece, 4)}`,
-                type: message.Type.CONFIRMATION
-            });
-            msg.show({ duration: 3000 });
-        } catch (e) {
-            // Silent fail
-        }
-    };
-
-    /**
-     * Handle UOM field change
-     */
     const handleUOMChange = (rec, line) => {
-        const sellingUom = rec.getCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: LINE_FIELDS.SELLING_UOM
-        });
-
-        const itemId = rec.getCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: 'item'
-        });
-
-        if (!itemId) return;
-
-        // Get dimensions
-        const thickness = parseFloat(rec.getCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: LINE_FIELDS.DIM_THICKNESS
-        })) || 0;
-
-        const width = parseFloat(rec.getCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: LINE_FIELDS.DIM_WIDTH
-        })) || 0;
-
-        const length = parseFloat(rec.getCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: LINE_FIELDS.DIM_LENGTH
-        })) || 0;
-
-        // Validate dimensions for selected UOM
-        const dimValidation = Validation.validateDimensionsForUOM(sellingUom, {
-            thickness, width, length
-        });
-
-        if (!dimValidation.isValid) {
-            dialog.alert({
-                title: 'Dimensions Required',
-                message: dimValidation.errors.join('\n') +
-                    '\n\nPlease enter the required dimensions for this UOM.'
-            });
-        }
-
-        // Show conversion factor
-        showConversionFactor(sellingUom, thickness, width, length);
-
-        // Recalculate BF
+        const uom = rec.getCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.SELLING_UOM });
+        const t = parseFloat(rec.getCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.DIM_THICKNESS })) || 0;
+        const w = parseFloat(rec.getCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.DIM_WIDTH })) || 0;
+        const l = parseFloat(rec.getCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.DIM_LENGTH })) || 0;
+        const errors = validateDimsForUOM(uom, t, w, l);
+        if (errors.length > 0) dialog.alert({ title: 'Dimension Required', message: errors.join('\n') });
         calculateLineBF(rec, line);
     };
 
-    /**
-     * Show conversion factor message
-     */
-    const showConversionFactor = (uomCode, thickness, width, length) => {
-        try {
-            const matrix = ConversionEngine.calculateConversionMatrix(thickness, width, length);
-            const description = matrix.descriptions[uomCode];
+    const validateDimsForUOM = (uom, t, w, l) => {
+        const errors = [];
+        if (uom === UOM_CODES.LINEAR_FEET && (t <= 0 || w <= 0)) { if (t <= 0) errors.push('Thickness required'); if (w <= 0) errors.push('Width required'); }
+        if ((uom === UOM_CODES.SQUARE_FEET || uom === UOM_CODES.MSF) && t <= 0) errors.push('Thickness required');
+        if ((uom === UOM_CODES.EACH || uom === UOM_CODES.BUNDLE) && (t <= 0 || w <= 0 || l <= 0)) { if (t <= 0) errors.push('Thickness required'); if (w <= 0) errors.push('Width required'); if (l <= 0) errors.push('Length required'); }
+        return errors;
+    };
 
-            if (description) {
-                const msg = message.create({
-                    title: 'Conversion Factor',
-                    message: description,
-                    type: message.Type.INFORMATION
-                });
-                msg.show({ duration: 4000 });
-            }
-        } catch (e) {
-            // Silent fail
+    const syncQuantity = (rec) => {
+        const uom = rec.getCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.SELLING_UOM });
+        if (!uom || uom === UOM_CODES.BOARD_FEET) {
+            rec.setCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.DISPLAY_QTY, value: rec.getCurrentSublistValue({ sublistId: 'item', fieldId: 'quantity' }), ignoreFieldChange: true });
         }
     };
 
-    /**
-     * Sync quantity field to display qty
-     */
-    const syncQuantityToDisplayQty = (rec, line) => {
-        const sellingUom = rec.getCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: LINE_FIELDS.SELLING_UOM
-        });
-
-        // Only sync if UOM is BF or not set
-        if (!sellingUom || sellingUom === UOM_CODES.BOARD_FEET) {
-            const qty = rec.getCurrentSublistValue({
-                sublistId: 'item',
-                fieldId: 'quantity'
-            });
-
-            rec.setCurrentSublistValue({
-                sublistId: 'item',
-                fieldId: LINE_FIELDS.DISPLAY_QTY,
-                value: qty,
-                ignoreFieldChange: true
-            });
-
-            calculateLineBF(rec, line);
-        }
-    };
-
-    /**
-     * Calculate BF for current line
-     */
     const calculateLineBF = (rec, line) => {
-        const itemId = rec.getCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: 'item'
-        });
-
+        const itemId = rec.getCurrentSublistValue({ sublistId: 'item', fieldId: 'item' });
         if (!itemId) return;
-
         const itemData = getItemData(itemId);
         if (!itemData.isLumber) return;
-
-        // Get values
-        const sellingUom = rec.getCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: LINE_FIELDS.SELLING_UOM
-        }) || UOM_CODES.BOARD_FEET;
-
-        const displayQty = parseFloat(rec.getCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: LINE_FIELDS.DISPLAY_QTY
-        })) || parseFloat(rec.getCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: 'quantity'
-        })) || 0;
-
-        const thickness = parseFloat(rec.getCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: LINE_FIELDS.DIM_THICKNESS
-        })) || itemData.thickness || 0;
-
-        const width = parseFloat(rec.getCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: LINE_FIELDS.DIM_WIDTH
-        })) || itemData.width || 0;
-
-        const length = parseFloat(rec.getCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: LINE_FIELDS.DIM_LENGTH
-        })) || itemData.length || 0;
-
-        if (displayQty <= 0) return;
-
-        // Convert to BF
-        const conversion = ConversionEngine.convertToBoardFeet({
-            sourceUom: sellingUom,
-            sourceQty: displayQty,
-            thickness: thickness,
-            width: width,
-            length: length,
-            piecesPerBundle: itemData.piecesPerBundle || 1
-        });
-
-        if (!conversion.isValid) {
-            console.warn('CLS Estimate CS: Conversion failed', conversion.error);
-            return;
-        }
-
-        const precision = SettingsDAO.getBFPrecision();
-
-        // Set calculated BF
-        rec.setCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: LINE_FIELDS.CALCULATED_BF,
-            value: BFCalculator.roundTo(conversion.boardFeet, precision),
-            ignoreFieldChange: true
-        });
-
-        // Set conversion factor
-        rec.setCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: LINE_FIELDS.CONVERSION_FACTOR,
-            value: BFCalculator.roundTo(conversion.conversionFactor, PRECISION.FACTOR),
-            ignoreFieldChange: true
-        });
-
-        // Calculate BF cost
-        calculateBFCost(rec, itemData, conversion.boardFeet);
-
-        // Calculate price per BF
-        calculatePricePerBF(rec, line);
-
-        // Update totals
-        calculateTotals(rec);
-
-        console.log('CLS Estimate CS: BF calculated', {
-            displayQty,
-            sellingUom,
-            boardFeet: conversion.boardFeet,
-            conversionFactor: conversion.conversionFactor
-        });
+        const uom = rec.getCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.SELLING_UOM }) || UOM_CODES.BOARD_FEET;
+        const qty = parseFloat(rec.getCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.DISPLAY_QTY })) || parseFloat(rec.getCurrentSublistValue({ sublistId: 'item', fieldId: 'quantity' })) || 0;
+        const t = parseFloat(rec.getCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.DIM_THICKNESS })) || itemData.thickness || 0;
+        const w = parseFloat(rec.getCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.DIM_WIDTH })) || itemData.width || 0;
+        const l = parseFloat(rec.getCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.DIM_LENGTH })) || itemData.length || 0;
+        if (qty <= 0) return;
+        const conv = convertToBoardFeet({ sourceUom: uom, sourceQty: qty, thickness: t, width: w, length: l, piecesPerBundle: itemData.piecesPerBundle || 1 });
+        if (!conv.isValid) return;
+        try { rec.setCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.CALCULATED_BF, value: conv.boardFeet, ignoreFieldChange: true }); } catch (e) {}
+        try { rec.setCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.CONVERSION_FACTOR, value: conv.conversionFactor, ignoreFieldChange: true }); } catch (e) {}
+        rec.setCurrentSublistValue({ sublistId: 'item', fieldId: 'quantity', value: conv.boardFeet, ignoreFieldChange: true });
+        calculateTotalBF(rec);
     };
 
-    /**
-     * Calculate BF cost
-     */
-    const calculateBFCost = (rec, itemData, boardFeet) => {
-        const bfCost = itemData.baseBFCost || 0;
-
-        rec.setCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: LINE_FIELDS.BF_UNIT_COST,
-            value: BFCalculator.roundTo(bfCost, PRECISION.CURRENCY),
-            ignoreFieldChange: true
-        });
-
-        const extendedCost = boardFeet * bfCost;
-        rec.setCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: LINE_FIELDS.EXTENDED_BF_COST,
-            value: BFCalculator.roundTo(extendedCost, PRECISION.CURRENCY),
-            ignoreFieldChange: true
-        });
-    };
-
-    /**
-     * Calculate price per BF
-     */
-    const calculatePricePerBF = (rec, line) => {
-        const calculatedBF = parseFloat(rec.getCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: LINE_FIELDS.CALCULATED_BF
-        })) || 0;
-
-        const amount = parseFloat(rec.getCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: 'amount'
-        })) || 0;
-
-        if (calculatedBF > 0 && amount > 0) {
-            const pricePerBF = amount / calculatedBF;
-            console.log('CLS Estimate CS: Price per BF', BFCalculator.roundTo(pricePerBF, PRECISION.CURRENCY));
-        }
-    };
-
-    /**
-     * Calculate totals for the estimate
-     */
-    const calculateTotals = (rec) => {
+    const calculateTotalBF = (rec) => {
         try {
             const lineCount = rec.getLineCount({ sublistId: 'item' });
             let totalBF = 0;
-            let totalBFCost = 0;
-
-            for (let i = 0; i < lineCount; i++) {
-                totalBF += parseFloat(rec.getSublistValue({
-                    sublistId: 'item',
-                    fieldId: LINE_FIELDS.CALCULATED_BF,
-                    line: i
-                })) || 0;
-
-                totalBFCost += parseFloat(rec.getSublistValue({
-                    sublistId: 'item',
-                    fieldId: LINE_FIELDS.EXTENDED_BF_COST,
-                    line: i
-                })) || 0;
-            }
-
-            rec.setValue({
-                fieldId: BODY_FIELDS.TOTAL_BF,
-                value: BFCalculator.roundTo(totalBF, SettingsDAO.getBFPrecision()),
-                ignoreFieldChange: true
-            });
-
-        } catch (e) {
-            console.error('CLS Estimate CS: calculateTotals error', e);
-        }
+            for (let i = 0; i < lineCount; i++) totalBF += parseFloat(rec.getSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.CALCULATED_BF, line: i })) || 0;
+            try { rec.setValue({ fieldId: BODY_FIELDS.TOTAL_BF, value: BFCalculator.roundTo(totalBF, getSettings().bfPrecision), ignoreFieldChange: true }); } catch (e) {}
+        } catch (e) {}
     };
 
-    /**
-     * Clear lumber fields for non-lumber items
-     */
     const clearLumberFields = (rec) => {
-        const fields = [
-            LINE_FIELDS.SELLING_UOM,
-            LINE_FIELDS.DISPLAY_QTY,
-            LINE_FIELDS.DIM_THICKNESS,
-            LINE_FIELDS.DIM_WIDTH,
-            LINE_FIELDS.DIM_LENGTH,
-            LINE_FIELDS.CALCULATED_BF,
-            LINE_FIELDS.CONVERSION_FACTOR,
-            LINE_FIELDS.BF_UNIT_COST,
-            LINE_FIELDS.EXTENDED_BF_COST
-        ];
-
-        fields.forEach((fieldId) => {
-            try {
-                rec.setCurrentSublistValue({
-                    sublistId: 'item',
-                    fieldId: fieldId,
-                    value: '',
-                    ignoreFieldChange: true
-                });
-            } catch (e) {
-                // Field may not exist
-            }
+        [LINE_FIELDS.SELLING_UOM, LINE_FIELDS.DISPLAY_QTY, LINE_FIELDS.DIM_THICKNESS, LINE_FIELDS.DIM_WIDTH, LINE_FIELDS.DIM_LENGTH, LINE_FIELDS.CALCULATED_BF, LINE_FIELDS.CONVERSION_FACTOR].forEach((f) => {
+            try { rec.setCurrentSublistValue({ sublistId: 'item', fieldId: f, value: '', ignoreFieldChange: true }); } catch (e) {}
         });
     };
 
-    /**
-     * Get item data with caching
-     */
     const getItemData = (itemId) => {
-        if (itemCache[itemId]) {
+        if (itemCache[itemId]) return itemCache[itemId];
+        try {
+            const r = search.lookupFields({ type: search.Type.ITEM, id: itemId, columns: [ITEM_FIELDS.IS_LUMBER, ITEM_FIELDS.NOMINAL_THICKNESS, ITEM_FIELDS.NOMINAL_WIDTH, ITEM_FIELDS.NOMINAL_LENGTH, ITEM_FIELDS.PIECES_PER_BUNDLE, ITEM_FIELDS.BASE_BF_COST] });
+            itemCache[itemId] = { isLumber: r[ITEM_FIELDS.IS_LUMBER] === true, thickness: parseFloat(r[ITEM_FIELDS.NOMINAL_THICKNESS]) || 0, width: parseFloat(r[ITEM_FIELDS.NOMINAL_WIDTH]) || 0, length: parseFloat(r[ITEM_FIELDS.NOMINAL_LENGTH]) || 0, piecesPerBundle: parseInt(r[ITEM_FIELDS.PIECES_PER_BUNDLE], 10) || 1, baseBFCost: parseFloat(r[ITEM_FIELDS.BASE_BF_COST]) || 0 };
             return itemCache[itemId];
-        }
-
-        try {
-            const lookupResult = search.lookupFields({
-                type: search.Type.ITEM,
-                id: itemId,
-                columns: [
-                    ITEM_FIELDS.IS_LUMBER,
-                    ITEM_FIELDS.NOMINAL_THICKNESS,
-                    ITEM_FIELDS.NOMINAL_WIDTH,
-                    ITEM_FIELDS.NOMINAL_LENGTH,
-                    ITEM_FIELDS.PIECES_PER_BUNDLE,
-                    ITEM_FIELDS.ALLOW_DYNAMIC_DIMS,
-                    ITEM_FIELDS.BASE_BF_COST,
-                    ITEM_FIELDS.SPECIES,
-                    ITEM_FIELDS.GRADE
-                ]
-            });
-
-            const itemData = {
-                isLumber: lookupResult[ITEM_FIELDS.IS_LUMBER] === true,
-                thickness: parseFloat(lookupResult[ITEM_FIELDS.NOMINAL_THICKNESS]) || 0,
-                width: parseFloat(lookupResult[ITEM_FIELDS.NOMINAL_WIDTH]) || 0,
-                length: parseFloat(lookupResult[ITEM_FIELDS.NOMINAL_LENGTH]) || 0,
-                piecesPerBundle: parseInt(lookupResult[ITEM_FIELDS.PIECES_PER_BUNDLE], 10) || 1,
-                allowDynamicDims: lookupResult[ITEM_FIELDS.ALLOW_DYNAMIC_DIMS] === true,
-                baseBFCost: parseFloat(lookupResult[ITEM_FIELDS.BASE_BF_COST]) || 0
-            };
-
-            itemCache[itemId] = itemData;
-            return itemData;
-
-        } catch (e) {
-            console.error('CLS Estimate CS: getItemData error', e);
-            return { isLumber: false };
-        }
+        } catch (e) { return { isLumber: false, thickness: 0, width: 0, length: 0, piecesPerBundle: 1, baseBFCost: 0 }; }
     };
 
-    /**
-     * validateLine - Validate line before commit
-     */
     const validateLine = (context) => {
-        const { currentRecord: rec, sublistId } = context;
-
-        if (sublistId !== 'item') return true;
-
-        try {
-            const itemId = rec.getCurrentSublistValue({
-                sublistId: 'item',
-                fieldId: 'item'
-            });
-
-            if (!itemId) return true;
-
-            const itemData = getItemData(itemId);
-            if (!itemData.isLumber) return true;
-
-            // Validate UOM and dimensions
-            const sellingUom = rec.getCurrentSublistValue({
-                sublistId: 'item',
-                fieldId: LINE_FIELDS.SELLING_UOM
-            }) || UOM_CODES.BOARD_FEET;
-
-            const thickness = parseFloat(rec.getCurrentSublistValue({
-                sublistId: 'item',
-                fieldId: LINE_FIELDS.DIM_THICKNESS
-            })) || itemData.thickness || 0;
-
-            const width = parseFloat(rec.getCurrentSublistValue({
-                sublistId: 'item',
-                fieldId: LINE_FIELDS.DIM_WIDTH
-            })) || itemData.width || 0;
-
-            const length = parseFloat(rec.getCurrentSublistValue({
-                sublistId: 'item',
-                fieldId: LINE_FIELDS.DIM_LENGTH
-            })) || itemData.length || 0;
-
-            const dimValidation = Validation.validateDimensionsForUOM(sellingUom, {
-                thickness, width, length
-            });
-
-            if (!dimValidation.isValid) {
-                dialog.alert({
-                    title: 'Validation Error',
-                    message: dimValidation.errors.join('\n')
-                });
-                return false;
-            }
-
-            return true;
-
-        } catch (e) {
-            console.error('CLS Estimate CS: validateLine error', e);
-            return true;
-        }
+        if (context.sublistId !== 'item') return true;
+        const itemId = context.currentRecord.getCurrentSublistValue({ sublistId: 'item', fieldId: 'item' });
+        if (!itemId) return true;
+        const itemData = getItemData(itemId);
+        if (!itemData.isLumber) return true;
+        const uom = context.currentRecord.getCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.SELLING_UOM }) || UOM_CODES.BOARD_FEET;
+        const t = parseFloat(context.currentRecord.getCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.DIM_THICKNESS })) || itemData.thickness || 0;
+        const w = parseFloat(context.currentRecord.getCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.DIM_WIDTH })) || itemData.width || 0;
+        const l = parseFloat(context.currentRecord.getCurrentSublistValue({ sublistId: 'item', fieldId: LINE_FIELDS.DIM_LENGTH })) || itemData.length || 0;
+        const errors = validateDimsForUOM(uom, t, w, l);
+        if (errors.length > 0) { dialog.alert({ title: 'Validation Error', message: errors.join('\n') }); return false; }
+        return true;
     };
 
-    /**
-     * sublistChanged - Handle sublist changes
-     */
-    const sublistChanged = (context) => {
-        const { currentRecord: rec, sublistId } = context;
+    const sublistChanged = (context) => { if (context.sublistId === 'item') calculateTotalBF(context.currentRecord); };
 
-        if (sublistId !== 'item') return;
-
-        calculateTotals(rec);
-    };
-
-    /**
-     * saveRecord - Final validation
-     */
     const saveRecord = (context) => {
         const rec = context.currentRecord;
-
-        try {
-            const totalBF = parseFloat(rec.getValue({ fieldId: BODY_FIELDS.TOTAL_BF })) || 0;
-            const lineCount = rec.getLineCount({ sublistId: 'item' });
-
-            let hasLumberItems = false;
-            for (let i = 0; i < lineCount; i++) {
-                const itemId = rec.getSublistValue({
-                    sublistId: 'item',
-                    fieldId: 'item',
-                    line: i
-                });
-                if (itemId && getItemData(itemId).isLumber) {
-                    hasLumberItems = true;
-                    break;
-                }
-            }
-
-            if (hasLumberItems && totalBF <= 0) {
-                return confirm('Total BF is zero for lumber items. Continue anyway?');
-            }
-
-            return true;
-
-        } catch (e) {
-            console.error('CLS Estimate CS: saveRecord error', e);
-            return true;
-        }
+        const lineCount = rec.getLineCount({ sublistId: 'item' });
+        let hasLumber = false;
+        for (let i = 0; i < lineCount; i++) { const itemId = rec.getSublistValue({ sublistId: 'item', fieldId: 'item', line: i }); if (itemId && getItemData(itemId).isLumber) hasLumber = true; }
+        if (hasLumber && (parseFloat(rec.getValue({ fieldId: BODY_FIELDS.TOTAL_BF })) || 0) <= 0) return confirm('Total BF is zero. Save anyway?');
+        return true;
     };
 
-    /**
-     * View conversion summary (button handler)
-     */
-    const viewConversionSummary = () => {
-        try {
-            const rec = currentRecord.get();
-            const lineCount = rec.getLineCount({ sublistId: 'item' });
-            const lines = [];
-
-            for (let i = 0; i < lineCount; i++) {
-                const calculatedBF = rec.getSublistValue({
-                    sublistId: 'item',
-                    fieldId: LINE_FIELDS.CALCULATED_BF,
-                    line: i
-                });
-
-                if (calculatedBF) {
-                    const itemText = rec.getSublistText({
-                        sublistId: 'item',
-                        fieldId: 'item',
-                        line: i
-                    });
-                    const displayQty = rec.getSublistValue({
-                        sublistId: 'item',
-                        fieldId: LINE_FIELDS.DISPLAY_QTY,
-                        line: i
-                    });
-                    const sellingUom = rec.getSublistValue({
-                        sublistId: 'item',
-                        fieldId: LINE_FIELDS.SELLING_UOM,
-                        line: i
-                    });
-                    const factor = rec.getSublistValue({
-                        sublistId: 'item',
-                        fieldId: LINE_FIELDS.CONVERSION_FACTOR,
-                        line: i
-                    });
-
-                    lines.push(
-                        `Line ${i + 1}: ${itemText}\n` +
-                        `  ${displayQty} ${sellingUom} × ${factor} = ${calculatedBF} BF`
-                    );
-                }
-            }
-
-            const totalBF = rec.getValue({ fieldId: BODY_FIELDS.TOTAL_BF });
-
-            dialog.alert({
-                title: 'BF Conversion Summary',
-                message: lines.length > 0
-                    ? lines.join('\n\n') + `\n\nTotal BF: ${totalBF}`
-                    : 'No lumber items found.'
-            });
-
-        } catch (e) {
-            console.error('CLS Estimate CS: viewConversionSummary error', e);
-        }
-    };
-
-    // Expose for button
-    window.viewConversionSummary = viewConversionSummary;
-
-    return {
-        pageInit,
-        fieldChanged,
-        validateLine,
-        sublistChanged,
-        saveRecord
-    };
+    return { pageInit, fieldChanged, validateLine, sublistChanged, saveRecord };
 });

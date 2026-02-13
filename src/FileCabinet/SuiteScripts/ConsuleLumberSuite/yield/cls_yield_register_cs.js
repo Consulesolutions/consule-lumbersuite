@@ -18,15 +18,13 @@ define([
     'N/search',
     'N/ui/dialog',
     'N/ui/message',
-    '../lib/cls_constants',
-    '../lib/cls_settings_dao'
+    '../lib/cls_constants'
 ], function(
     currentRecord,
     search,
     dialog,
     message,
-    Constants,
-    SettingsDAO
+    Constants
 ) {
     'use strict';
 
@@ -56,6 +54,31 @@ define([
         WARNING: 5,
         CRITICAL: 15
     };
+
+    /**
+     * Get default yield percentage from settings (client-safe)
+     * @returns {number} Default yield percentage
+     */
+    function getDefaultYieldPercentage() {
+        try {
+            const settingsSearch = search.create({
+                type: 'customrecord_cls_settings',
+                filters: [],
+                columns: ['custrecord_cls_default_yield']
+            });
+
+            let defaultYield = 85;
+            settingsSearch.run().each(function(result) {
+                defaultYield = parseFloat(result.getValue('custrecord_cls_default_yield')) || 85;
+                return false;
+            });
+
+            return defaultYield;
+        } catch (e) {
+            console.error('Error getting default yield:', e.message);
+            return 85;
+        }
+    }
 
     /**
      * pageInit Entry Point
@@ -88,7 +111,7 @@ define([
      */
     function initializeNewRecord(rec) {
         // Set default expected yield from settings
-        const defaultYield = SettingsDAO.getDefaultYieldPercentage() || 85;
+        const defaultYield = getDefaultYieldPercentage();
 
         rec.setValue({
             fieldId: Constants.YIELD_FIELDS.EXPECTED_YIELD,

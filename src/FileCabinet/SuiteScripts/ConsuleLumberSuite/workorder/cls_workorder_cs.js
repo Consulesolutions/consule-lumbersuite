@@ -11,7 +11,6 @@
  * - Dynamic UOM selection with conversion preview
  * - Dimension override handling
  * - Yield percentage management
- * - Tally sheet selection assistance
  *
  * @copyright Consule LLC
  * @author Consule Development Team
@@ -23,43 +22,165 @@ define([
     'N/ui/dialog',
     'N/ui/message',
     '../lib/cls_constants',
-    '../lib/cls_settings_dao',
-    '../lib/cls_conversion_engine',
-    '../lib/cls_dimension_resolver',
-    '../lib/cls_bf_calculator',
-    '../lib/cls_yield_service',
-    '../lib/cls_validation'
+    '../lib/cls_bf_calculator'
 ], (
     currentRecord,
     search,
     dialog,
     message,
     Constants,
-    SettingsDAO,
-    ConversionEngine,
-    DimensionResolver,
-    BFCalculator,
-    YieldService,
-    Validation
+    BFCalculator
 ) => {
 
     const LINE_FIELDS = Constants.LINE_FIELDS;
     const ITEM_FIELDS = Constants.ITEM_FIELDS;
     const BODY_FIELDS = Constants.BODY_FIELDS;
     const UOM_CODES = Constants.UOM_CODES;
+    const PRECISION = Constants.PRECISION;
+    const DEFAULTS = Constants.DEFAULTS;
 
     // Cache for item data to reduce lookups
     const itemCache = {};
+
+    // Settings cache
+    let settingsCache = null;
 
     // Flag to prevent recursive field changes
     let isCalculating = false;
 
     /**
+     * Get settings from cache or load via search (client-safe)
+     */
+    const getSettings = () => {
+        if (settingsCache) {
+            return settingsCache;
+        }
+
+        try {
+            const settingsSearch = search.create({
+                type: 'customrecord_cls_settings',
+                filters: [],
+                columns: [
+                    'custrecord_cls_enable_dynamic_uom',
+                    'custrecord_cls_enable_yield',
+                    'custrecord_cls_default_yield',
+                    'custrecord_cls_bf_precision'
+                ]
+            });
+
+            settingsCache = {
+                isDynamicUomEnabled: true,
+                isYieldEnabled: false,
+                defaultYield: DEFAULTS.YIELD_PCT,
+                bfPrecision: DEFAULTS.BF_PRECISION
+            };
+
+            settingsSearch.run().each((result) => {
+                settingsCache.isDynamicUomEnabled = result.getValue('custrecord_cls_enable_dynamic_uom') === true;
+                settingsCache.isYieldEnabled = result.getValue('custrecord_cls_enable_yield') === true;
+                settingsCache.defaultYield = parseFloat(result.getValue('custrecord_cls_default_yield')) || DEFAULTS.YIELD_PCT;
+                settingsCache.bfPrecision = parseInt(result.getValue('custrecord_cls_bf_precision'), 10) || DEFAULTS.BF_PRECISION;
+                return false;
+            });
+
+            return settingsCache;
+        } catch (e) {
+            console.error('Error loading settings:', e.message);
+            return {
+                isDynamicUomEnabled: true,
+                isYieldEnabled: false,
+                defaultYield: DEFAULTS.YIELD_PCT,
+                bfPrecision: DEFAULTS.BF_PRECISION
+            };
+        }
+    };
+
+    /**
+     * Convert source UOM to Board Feet (client-safe version)
+     */
+    const convertToBoardFeet = (params) => {
+        const { sourceUom, sourceQty, thickness, width, length, piecesPerBundle = 1 } = params;
+        const settings = getSettings();
+
+        const qty = parseFloat(sourceQty) || 0;
+        const t = parseFloat(thickness) || 0;
+        const w = parseFloat(width) || 0;
+        const l = parseFloat(length) || 0;
+        const ppb = parseInt(piecesPerBundle, 10) || 1;
+
+        if (qty <= 0) {
+            return { boardFeet: 0, conversionFactor: 0, isValid: true, error: null };
+        }
+
+        let boardFeet = 0;
+        let conversionFactor = 1;
+
+        switch (sourceUom) {
+            case UOM_CODES.BOARD_FEET:
+                boardFeet = qty;
+                conversionFactor = 1;
+                break;
+
+            case UOM_CODES.LINEAR_FEET:
+                if (t <= 0 || w <= 0) {
+                    return { boardFeet: 0, conversionFactor: 0, isValid: false, error: 'Thickness and width required for LF' };
+                }
+                conversionFactor = (t * w) / 12;
+                boardFeet = qty * conversionFactor;
+                break;
+
+            case UOM_CODES.SQUARE_FEET:
+                if (t <= 0) {
+                    return { boardFeet: 0, conversionFactor: 0, isValid: false, error: 'Thickness required for SF' };
+                }
+                conversionFactor = t / 12;
+                boardFeet = qty * conversionFactor;
+                break;
+
+            case UOM_CODES.MBF:
+                conversionFactor = 1000;
+                boardFeet = qty * conversionFactor;
+                break;
+
+            case UOM_CODES.MSF:
+                if (t <= 0) {
+                    return { boardFeet: 0, conversionFactor: 0, isValid: false, error: 'Thickness required for MSF' };
+                }
+                conversionFactor = (t / 12) * 1000;
+                boardFeet = qty * conversionFactor;
+                break;
+
+            case UOM_CODES.EACH:
+                if (t <= 0 || w <= 0 || l <= 0) {
+                    return { boardFeet: 0, conversionFactor: 0, isValid: false, error: 'All dimensions required' };
+                }
+                conversionFactor = BFCalculator.calculateBF({ thickness: t, width: w, length: l });
+                boardFeet = qty * conversionFactor;
+                break;
+
+            case UOM_CODES.BUNDLE:
+                if (t <= 0 || w <= 0 || l <= 0) {
+                    return { boardFeet: 0, conversionFactor: 0, isValid: false, error: 'All dimensions required' };
+                }
+                const bfPerPiece = BFCalculator.calculateBF({ thickness: t, width: w, length: l });
+                conversionFactor = bfPerPiece * ppb;
+                boardFeet = qty * conversionFactor;
+                break;
+
+            default:
+                return { boardFeet: 0, conversionFactor: 0, isValid: false, error: `Unknown UOM: ${sourceUom}` };
+        }
+
+        return {
+            boardFeet: BFCalculator.roundTo(boardFeet, settings.bfPrecision),
+            conversionFactor: BFCalculator.roundTo(conversionFactor, PRECISION.FACTOR),
+            isValid: true,
+            error: null
+        };
+    };
+
+    /**
      * pageInit - Initialize the form
-     *
-     * @param {Object} context
-     * @param {Record} context.currentRecord
-     * @param {string} context.mode
      */
     const pageInit = (context) => {
         const rec = context.currentRecord;
@@ -68,16 +189,14 @@ define([
         console.log('CLS Work Order CS: pageInit', mode);
 
         try {
-            // Check if LumberSuite is enabled
-            if (!SettingsDAO.isDynamicUomEnabled()) {
+            const settings = getSettings();
+            if (!settings.isDynamicUomEnabled) {
                 console.log('CLS Work Order CS: Dynamic UOM disabled');
                 return;
             }
 
-            // Display module status message
             showModuleStatus();
 
-            // Calculate totals on load
             if (mode === 'edit') {
                 calculateTotalBF(rec);
             }
@@ -92,51 +211,32 @@ define([
      */
     const showModuleStatus = () => {
         try {
-            const status = SettingsDAO.getModuleStatus();
-            const enabledModules = [];
+            const settings = getSettings();
+            const enabledModules = ['UOM Conversion'];
+            if (settings.isYieldEnabled) enabledModules.push('Yield Tracking');
 
-            if (status.dynamicUom) enabledModules.push('UOM Conversion');
-            if (status.yieldTracking) enabledModules.push('Yield Tracking');
-            if (status.wasteTracking) enabledModules.push('Waste Tracking');
-            if (status.tallySheets) enabledModules.push('Tally Sheets');
-
-            if (enabledModules.length > 0) {
-                const msg = message.create({
-                    title: 'LumberSuite Active',
-                    message: `Enabled: ${enabledModules.join(', ')}`,
-                    type: message.Type.INFORMATION
-                });
-                msg.show({ duration: 5000 });
-            }
+            const msg = message.create({
+                title: 'LumberSuite Active',
+                message: `Enabled: ${enabledModules.join(', ')}`,
+                type: message.Type.INFORMATION
+            });
+            msg.show({ duration: 5000 });
         } catch (e) {
-            // Silent fail - status message is not critical
+            // Silent fail
         }
     };
 
     /**
      * fieldChanged - Handle field changes
-     *
-     * @param {Object} context
-     * @param {Record} context.currentRecord
-     * @param {string} context.sublistId
-     * @param {string} context.fieldId
-     * @param {number} context.line
      */
     const fieldChanged = (context) => {
         const { currentRecord: rec, sublistId, fieldId, line } = context;
 
-        // Prevent recursive calls
-        if (isCalculating) {
-            return;
-        }
+        if (isCalculating) return;
 
         try {
-            // Only process item sublist
-            if (sublistId !== 'item') {
-                return;
-            }
+            if (sublistId !== 'item') return;
 
-            // Check if this is a lumber-related field change
             const lumberFields = [
                 'item',
                 LINE_FIELDS.SELLING_UOM,
@@ -148,25 +248,20 @@ define([
                 'quantity'
             ];
 
-            if (!lumberFields.includes(fieldId)) {
-                return;
-            }
+            if (!lumberFields.includes(fieldId)) return;
 
             console.log('CLS Work Order CS: fieldChanged', { fieldId, line });
 
             isCalculating = true;
 
-            // Handle item change - load defaults
             if (fieldId === 'item') {
                 handleItemChange(rec, line);
             }
 
-            // Handle UOM change
             if (fieldId === LINE_FIELDS.SELLING_UOM) {
                 handleUOMChange(rec, line);
             }
 
-            // Handle quantity or dimension changes - recalculate BF
             if (fieldId === LINE_FIELDS.DISPLAY_QTY ||
                 fieldId === LINE_FIELDS.DIM_THICKNESS ||
                 fieldId === LINE_FIELDS.DIM_WIDTH ||
@@ -175,7 +270,6 @@ define([
                 calculateLineBF(rec, line);
             }
 
-            // Handle standard quantity field - sync with display qty if BF
             if (fieldId === 'quantity') {
                 const sellingUom = rec.getCurrentSublistValue({
                     sublistId: 'item',
@@ -204,9 +298,6 @@ define([
 
     /**
      * Handle item field change - load item defaults
-     *
-     * @param {Record} rec
-     * @param {number} line
      */
     const handleItemChange = (rec, line) => {
         const itemId = rec.getCurrentSublistValue({
@@ -214,15 +305,11 @@ define([
             fieldId: 'item'
         });
 
-        if (!itemId) {
-            return;
-        }
+        if (!itemId) return;
 
-        // Check if lumber item
         const itemData = getItemData(itemId);
 
         if (!itemData.isLumber) {
-            // Clear lumber fields for non-lumber items
             clearLumberFields(rec);
             return;
         }
@@ -249,7 +336,6 @@ define([
             ignoreFieldChange: true
         });
 
-        // Set default selling UOM to BF
         rec.setCurrentSublistValue({
             sublistId: 'item',
             fieldId: LINE_FIELDS.SELLING_UOM,
@@ -258,8 +344,9 @@ define([
         });
 
         // Set default yield if enabled
-        if (SettingsDAO.isYieldEnabled()) {
-            const defaultYield = YieldService.getItemDefaultYield(itemId);
+        const settings = getSettings();
+        if (settings.isYieldEnabled) {
+            const defaultYield = itemData.defaultYieldPct || settings.defaultYield;
             rec.setCurrentSublistValue({
                 sublistId: 'item',
                 fieldId: LINE_FIELDS.YIELD_PCT,
@@ -268,15 +355,11 @@ define([
             });
         }
 
-        // Calculate BF for any existing quantity
         calculateLineBF(rec, line);
     };
 
     /**
      * Handle UOM field change
-     *
-     * @param {Record} rec
-     * @param {number} line
      */
     const handleUOMChange = (rec, line) => {
         const sellingUom = rec.getCurrentSublistValue({
@@ -284,14 +367,6 @@ define([
             fieldId: LINE_FIELDS.SELLING_UOM
         });
 
-        const itemId = rec.getCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: 'item'
-        });
-
-        if (!itemId) return;
-
-        // Get current dimensions
         const thickness = parseFloat(rec.getCurrentSublistValue({
             sublistId: 'item',
             fieldId: LINE_FIELDS.DIM_THICKNESS
@@ -308,24 +383,47 @@ define([
         })) || 0;
 
         // Validate dimensions for selected UOM
-        const dimValidation = Validation.validateDimensionsForUOM(sellingUom, {
-            thickness,
-            width,
-            length
-        });
-
-        if (!dimValidation.isValid) {
+        const errors = validateDimensionsForUOM(sellingUom, { thickness, width, length });
+        if (errors.length > 0) {
             dialog.alert({
                 title: 'Dimension Required',
-                message: dimValidation.errors.join('\n')
+                message: errors.join('\n')
             });
         }
 
-        // Show conversion info
         showConversionPreview(sellingUom, thickness, width, length);
-
-        // Recalculate BF
         calculateLineBF(rec, line);
+    };
+
+    /**
+     * Validate dimensions for UOM (client-safe version)
+     */
+    const validateDimensionsForUOM = (uomCode, dimensions) => {
+        const errors = [];
+        const { thickness, width, length } = dimensions;
+
+        const hasT = thickness > 0;
+        const hasW = width > 0;
+        const hasL = length > 0;
+
+        switch (uomCode) {
+            case UOM_CODES.LINEAR_FEET:
+                if (!hasT) errors.push('Thickness required for Linear Feet');
+                if (!hasW) errors.push('Width required for Linear Feet');
+                break;
+            case UOM_CODES.SQUARE_FEET:
+            case UOM_CODES.MSF:
+                if (!hasT) errors.push('Thickness required for Square Feet');
+                break;
+            case UOM_CODES.EACH:
+            case UOM_CODES.BUNDLE:
+                if (!hasT) errors.push('Thickness required');
+                if (!hasW) errors.push('Width required');
+                if (!hasL) errors.push('Length required');
+                break;
+        }
+
+        return errors;
     };
 
     /**
@@ -333,12 +431,24 @@ define([
      */
     const showConversionPreview = (uomCode, thickness, width, length) => {
         try {
-            const matrix = ConversionEngine.calculateConversionMatrix(thickness, width, length);
+            const t = parseFloat(thickness) || 0;
+            const w = parseFloat(width) || 0;
+            const l = parseFloat(length) || 0;
 
-            if (matrix.descriptions[uomCode]) {
+            let description = '';
+            if (uomCode === UOM_CODES.LINEAR_FEET && t > 0 && w > 0) {
+                description = `1 LF = ${BFCalculator.roundTo((t * w) / 12, 4)} BF`;
+            } else if (uomCode === UOM_CODES.SQUARE_FEET && t > 0) {
+                description = `1 SF = ${BFCalculator.roundTo(t / 12, 4)} BF`;
+            } else if (uomCode === UOM_CODES.EACH && t > 0 && w > 0 && l > 0) {
+                const bf = BFCalculator.calculateBF({ thickness: t, width: w, length: l });
+                description = `1 PC = ${bf} BF`;
+            }
+
+            if (description) {
                 const msg = message.create({
                     title: 'Conversion Factor',
-                    message: matrix.descriptions[uomCode],
+                    message: description,
                     type: message.Type.INFORMATION
                 });
                 msg.show({ duration: 3000 });
@@ -350,9 +460,6 @@ define([
 
     /**
      * Calculate BF for current line
-     *
-     * @param {Record} rec
-     * @param {number} line
      */
     const calculateLineBF = (rec, line) => {
         const itemId = rec.getCurrentSublistValue({
@@ -362,13 +469,11 @@ define([
 
         if (!itemId) return;
 
-        // Check if lumber item
         const itemData = getItemData(itemId);
-        if (!itemData.isLumber) {
-            return;
-        }
+        if (!itemData.isLumber) return;
 
-        // Get values
+        const settings = getSettings();
+
         const sellingUom = rec.getCurrentSublistValue({
             sublistId: 'item',
             fieldId: LINE_FIELDS.SELLING_UOM
@@ -397,17 +502,14 @@ define([
             fieldId: LINE_FIELDS.DIM_LENGTH
         })) || itemData.length || 0;
 
-        if (displayQty <= 0) {
-            return;
-        }
+        if (displayQty <= 0) return;
 
-        // Convert to BF
-        const conversion = ConversionEngine.convertToBoardFeet({
+        const conversion = convertToBoardFeet({
             sourceUom: sellingUom,
             sourceQty: displayQty,
-            thickness: thickness,
-            width: width,
-            length: length,
+            thickness,
+            width,
+            length,
             piecesPerBundle: itemData.piecesPerBundle || 1
         });
 
@@ -420,45 +522,53 @@ define([
         let calculatedBF = theoreticalBF;
 
         // Apply yield if enabled
-        if (SettingsDAO.isYieldEnabled()) {
+        if (settings.isYieldEnabled) {
             const yieldPct = parseFloat(rec.getCurrentSublistValue({
                 sublistId: 'item',
                 fieldId: LINE_FIELDS.YIELD_PCT
-            })) || SettingsDAO.getDefaultYield();
+            })) || settings.defaultYield;
 
             // Calculate raw material needed based on yield
-            calculatedBF = YieldService.calculateTheoreticalBF(theoreticalBF, yieldPct);
+            if (yieldPct > 0 && yieldPct < 100) {
+                calculatedBF = BFCalculator.roundTo(theoreticalBF / (yieldPct / 100), settings.bfPrecision);
+            }
 
-            // Set theoretical BF (finished goods requirement)
-            rec.setCurrentSublistValue({
-                sublistId: 'item',
-                fieldId: LINE_FIELDS.THEORETICAL_BF,
-                value: BFCalculator.roundTo(theoreticalBF, SettingsDAO.getBFPrecision()),
-                ignoreFieldChange: true
-            });
+            // Set theoretical BF
+            try {
+                rec.setCurrentSublistValue({
+                    sublistId: 'item',
+                    fieldId: LINE_FIELDS.THEORETICAL_BF,
+                    value: BFCalculator.roundTo(theoreticalBF, settings.bfPrecision),
+                    ignoreFieldChange: true
+                });
+            } catch (e) { /* Field may not exist */ }
         }
 
-        // Set calculated BF (raw material to consume)
-        rec.setCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: LINE_FIELDS.CALCULATED_BF,
-            value: BFCalculator.roundTo(calculatedBF, SettingsDAO.getBFPrecision()),
-            ignoreFieldChange: true
-        });
+        // Set calculated BF
+        try {
+            rec.setCurrentSublistValue({
+                sublistId: 'item',
+                fieldId: LINE_FIELDS.CALCULATED_BF,
+                value: BFCalculator.roundTo(calculatedBF, settings.bfPrecision),
+                ignoreFieldChange: true
+            });
+        } catch (e) { /* Field may not exist */ }
 
         // Set conversion factor
-        rec.setCurrentSublistValue({
-            sublistId: 'item',
-            fieldId: LINE_FIELDS.CONVERSION_FACTOR,
-            value: BFCalculator.roundTo(conversion.conversionFactor, Constants.PRECISION.FACTOR),
-            ignoreFieldChange: true
-        });
+        try {
+            rec.setCurrentSublistValue({
+                sublistId: 'item',
+                fieldId: LINE_FIELDS.CONVERSION_FACTOR,
+                value: conversion.conversionFactor,
+                ignoreFieldChange: true
+            });
+        } catch (e) { /* Field may not exist */ }
 
         // Update quantity field with BF value
         rec.setCurrentSublistValue({
             sublistId: 'item',
             fieldId: 'quantity',
-            value: BFCalculator.roundTo(calculatedBF, SettingsDAO.getBFPrecision()),
+            value: BFCalculator.roundTo(calculatedBF, settings.bfPrecision),
             ignoreFieldChange: true
         });
 
@@ -470,17 +580,15 @@ define([
             conversionFactor: conversion.conversionFactor
         });
 
-        // Update total
         calculateTotalBF(rec);
     };
 
     /**
      * Calculate total BF for the work order
-     *
-     * @param {Record} rec
      */
     const calculateTotalBF = (rec) => {
         try {
+            const settings = getSettings();
             const lineCount = rec.getLineCount({ sublistId: 'item' });
             let totalBF = 0;
             let totalTheoreticalBF = 0;
@@ -502,18 +610,22 @@ define([
                 totalTheoreticalBF += theoreticalBF;
             }
 
-            rec.setValue({
-                fieldId: BODY_FIELDS.TOTAL_BF,
-                value: BFCalculator.roundTo(totalBF, SettingsDAO.getBFPrecision()),
-                ignoreFieldChange: true
-            });
-
-            if (SettingsDAO.isYieldEnabled()) {
+            try {
                 rec.setValue({
-                    fieldId: BODY_FIELDS.TOTAL_THEORETICAL_BF,
-                    value: BFCalculator.roundTo(totalTheoreticalBF, SettingsDAO.getBFPrecision()),
+                    fieldId: BODY_FIELDS.TOTAL_BF,
+                    value: BFCalculator.roundTo(totalBF, settings.bfPrecision),
                     ignoreFieldChange: true
                 });
+            } catch (e) { /* Field may not exist */ }
+
+            if (settings.isYieldEnabled) {
+                try {
+                    rec.setValue({
+                        fieldId: BODY_FIELDS.TOTAL_THEORETICAL_BF,
+                        value: BFCalculator.roundTo(totalTheoreticalBF, settings.bfPrecision),
+                        ignoreFieldChange: true
+                    });
+                } catch (e) { /* Field may not exist */ }
             }
 
         } catch (e) {
@@ -523,8 +635,6 @@ define([
 
     /**
      * Clear lumber fields for non-lumber items
-     *
-     * @param {Record} rec
      */
     const clearLumberFields = (rec) => {
         const fields = [
@@ -555,9 +665,6 @@ define([
 
     /**
      * Get item data with caching
-     *
-     * @param {number} itemId
-     * @returns {Object} Item data
      */
     const getItemData = (itemId) => {
         if (itemCache[itemId]) {
@@ -608,16 +715,11 @@ define([
 
     /**
      * validateLine - Validate line before commit
-     *
-     * @param {Object} context
-     * @returns {boolean}
      */
     const validateLine = (context) => {
         const { currentRecord: rec, sublistId } = context;
 
-        if (sublistId !== 'item') {
-            return true;
-        }
+        if (sublistId !== 'item') return true;
 
         try {
             const itemId = rec.getCurrentSublistValue({
@@ -625,23 +727,16 @@ define([
                 fieldId: 'item'
             });
 
-            if (!itemId) {
-                return true;
-            }
+            if (!itemId) return true;
 
-            // Check if lumber item
             const itemData = getItemData(itemId);
-            if (!itemData.isLumber) {
-                return true;
-            }
+            if (!itemData.isLumber) return true;
 
-            // Get selling UOM
             const sellingUom = rec.getCurrentSublistValue({
                 sublistId: 'item',
                 fieldId: LINE_FIELDS.SELLING_UOM
             }) || UOM_CODES.BOARD_FEET;
 
-            // Get dimensions
             const thickness = parseFloat(rec.getCurrentSublistValue({
                 sublistId: 'item',
                 fieldId: LINE_FIELDS.DIM_THICKNESS
@@ -657,33 +752,27 @@ define([
                 fieldId: LINE_FIELDS.DIM_LENGTH
             })) || itemData.length || 0;
 
-            // Validate dimensions for UOM
-            const dimValidation = Validation.validateDimensionsForUOM(sellingUom, {
-                thickness,
-                width,
-                length
-            });
-
-            if (!dimValidation.isValid) {
+            const errors = validateDimensionsForUOM(sellingUom, { thickness, width, length });
+            if (errors.length > 0) {
                 dialog.alert({
                     title: 'Validation Error',
-                    message: dimValidation.errors.join('\n')
+                    message: errors.join('\n')
                 });
                 return false;
             }
 
             // Validate yield if enabled
-            if (SettingsDAO.isYieldEnabled()) {
+            const settings = getSettings();
+            if (settings.isYieldEnabled) {
                 const yieldPct = parseFloat(rec.getCurrentSublistValue({
                     sublistId: 'item',
                     fieldId: LINE_FIELDS.YIELD_PCT
                 })) || 0;
 
-                const yieldValidation = Validation.validateYieldPercentage(yieldPct);
-                if (!yieldValidation.isValid) {
+                if (yieldPct <= 0 || yieldPct > 100) {
                     dialog.alert({
                         title: 'Validation Error',
-                        message: yieldValidation.errors.join('\n')
+                        message: 'Yield percentage must be between 1 and 100'
                     });
                     return false;
                 }
@@ -699,31 +788,22 @@ define([
 
     /**
      * sublistChanged - Handle sublist changes
-     *
-     * @param {Object} context
      */
     const sublistChanged = (context) => {
         const { currentRecord: rec, sublistId } = context;
 
-        if (sublistId !== 'item') {
-            return;
-        }
+        if (sublistId !== 'item') return;
 
-        // Recalculate total when lines change
         calculateTotalBF(rec);
     };
 
     /**
      * saveRecord - Final validation before save
-     *
-     * @param {Object} context
-     * @returns {boolean}
      */
     const saveRecord = (context) => {
         const rec = context.currentRecord;
 
         try {
-            // Recalculate all lines before save
             const lineCount = rec.getLineCount({ sublistId: 'item' });
             let hasLumberItems = false;
 
@@ -768,46 +848,37 @@ define([
             const lines = [];
 
             for (let i = 0; i < lineCount; i++) {
-                const itemId = rec.getSublistValue({
-                    sublistId: 'item',
-                    fieldId: 'item',
-                    line: i
-                });
-
-                const itemText = rec.getSublistText({
-                    sublistId: 'item',
-                    fieldId: 'item',
-                    line: i
-                });
-
                 const calculatedBF = rec.getSublistValue({
                     sublistId: 'item',
                     fieldId: LINE_FIELDS.CALCULATED_BF,
                     line: i
                 });
 
-                const sellingUom = rec.getSublistValue({
-                    sublistId: 'item',
-                    fieldId: LINE_FIELDS.SELLING_UOM,
-                    line: i
-                });
-
-                const displayQty = rec.getSublistValue({
-                    sublistId: 'item',
-                    fieldId: LINE_FIELDS.DISPLAY_QTY,
-                    line: i
-                });
-
-                const conversionFactor = rec.getSublistValue({
-                    sublistId: 'item',
-                    fieldId: LINE_FIELDS.CONVERSION_FACTOR,
-                    line: i
-                });
-
                 if (calculatedBF) {
+                    const itemText = rec.getSublistText({
+                        sublistId: 'item',
+                        fieldId: 'item',
+                        line: i
+                    });
+                    const displayQty = rec.getSublistValue({
+                        sublistId: 'item',
+                        fieldId: LINE_FIELDS.DISPLAY_QTY,
+                        line: i
+                    });
+                    const sellingUom = rec.getSublistValue({
+                        sublistId: 'item',
+                        fieldId: LINE_FIELDS.SELLING_UOM,
+                        line: i
+                    });
+                    const factor = rec.getSublistValue({
+                        sublistId: 'item',
+                        fieldId: LINE_FIELDS.CONVERSION_FACTOR,
+                        line: i
+                    });
+
                     lines.push(
                         `Line ${i + 1}: ${itemText}\n` +
-                        `  ${displayQty} ${sellingUom} × ${conversionFactor} = ${calculatedBF} BF`
+                        `  ${displayQty} ${sellingUom} × ${factor} = ${calculatedBF} BF`
                     );
                 }
             }
