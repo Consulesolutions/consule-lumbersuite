@@ -676,6 +676,179 @@ define([
         }
     };
 
+    /**
+     * Record consumption from a tally sheet
+     * Used when fulfilling orders or completing work orders
+     *
+     * @param {Object} params - Consumption parameters
+     * @param {number} params.tallyId - Tally sheet internal ID
+     * @param {number} params.consumedBF - BF consumed
+     * @param {number} [params.transactionId] - Related transaction ID
+     * @param {string} [params.transactionType] - Type of transaction
+     * @returns {Object} Result with success status
+     */
+    const recordConsumption = (params) => {
+        try {
+            const { tallyId, consumedBF, transactionId, transactionType } = params;
+
+            // Reduce the tally BF
+            const reduceResult = reduceTallyBF(tallyId, consumedBF);
+            if (!reduceResult.success) {
+                return reduceResult;
+            }
+
+            // Update tally status
+            updateTallyStatus(tallyId);
+
+            return {
+                success: true,
+                tallyId,
+                consumedBF,
+                remainingBF: reduceResult.remainingBF
+            };
+
+        } catch (e) {
+            log.error({
+                title: 'CLS Tally Service - recordConsumption',
+                details: e.message
+            });
+            return {
+                success: false,
+                error: e.message
+            };
+        }
+    };
+
+    /**
+     * Reverse a consumption (for voided transactions)
+     *
+     * @param {Object} params - Reversal parameters
+     * @param {number} params.tallyId - Tally sheet internal ID
+     * @param {number} params.reverseBF - BF to add back
+     * @returns {Object} Result with success status
+     */
+    const reverseConsumption = (params) => {
+        try {
+            const { tallyId, reverseBF } = params;
+
+            // Load and update tally
+            const tallyRec = record.load({
+                type: RECORD_TYPES.TALLY_SHEET,
+                id: tallyId,
+                isDynamic: true
+            });
+
+            const currentRemaining = parseFloat(tallyRec.getValue({ fieldId: TALLY_FIELDS.REMAINING_BF })) || 0;
+            const receivedBF = parseFloat(tallyRec.getValue({ fieldId: TALLY_FIELDS.RECEIVED_BF })) || 0;
+            const newRemaining = Math.min(currentRemaining + reverseBF, receivedBF);
+
+            tallyRec.setValue({ fieldId: TALLY_FIELDS.REMAINING_BF, value: newRemaining });
+            tallyRec.save();
+
+            // Update status
+            updateTallyStatus(tallyId);
+
+            return {
+                success: true,
+                tallyId,
+                reversedBF: reverseBF,
+                remainingBF: newRemaining
+            };
+
+        } catch (e) {
+            log.error({
+                title: 'CLS Tally Service - reverseConsumption',
+                details: e.message
+            });
+            return {
+                success: false,
+                error: e.message
+            };
+        }
+    };
+
+    /**
+     * Allocate tally sheets using FIFO (First In First Out)
+     *
+     * @param {Object} params - FIFO allocation parameters
+     * @param {number} params.itemId - Item internal ID
+     * @param {number} params.requiredBF - Required board feet
+     * @param {number} params.locationId - Location internal ID
+     * @param {number} params.subsidiaryId - Subsidiary internal ID
+     * @param {number} [params.workOrderId] - Work Order to allocate to
+     * @returns {Object} Result with allocations array
+     */
+    const allocateFIFO = (params) => {
+        try {
+            const { itemId, requiredBF, locationId, subsidiaryId, workOrderId } = params;
+
+            // Find available tallies in FIFO order
+            const availableTallies = findAvailableTallies({
+                itemId,
+                locationId,
+                subsidiaryId
+            });
+
+            if (availableTallies.length === 0) {
+                return {
+                    success: false,
+                    allocations: [],
+                    error: 'No available tally sheets found'
+                };
+            }
+
+            const allocations = [];
+            let remainingBF = requiredBF;
+
+            for (const tally of availableTallies) {
+                if (remainingBF <= 0) break;
+
+                const allocateBF = Math.min(tally.remainingBF, remainingBF);
+
+                if (workOrderId) {
+                    const allocResult = createAllocation({
+                        tallyId: tally.id,
+                        workOrderId,
+                        allocatedBF: allocateBF
+                    });
+
+                    if (allocResult.success) {
+                        allocations.push({
+                            tallyId: tally.id,
+                            allocatedBF: allocateBF,
+                            allocationId: allocResult.allocationId
+                        });
+                        remainingBF -= allocateBF;
+                    }
+                } else {
+                    allocations.push({
+                        tallyId: tally.id,
+                        availableBF: allocateBF
+                    });
+                    remainingBF -= allocateBF;
+                }
+            }
+
+            return {
+                success: remainingBF <= 0,
+                allocations,
+                totalAllocated: requiredBF - remainingBF,
+                shortfall: remainingBF > 0 ? remainingBF : 0
+            };
+
+        } catch (e) {
+            log.error({
+                title: 'CLS Tally Service - allocateFIFO',
+                details: e.message
+            });
+            return {
+                success: false,
+                allocations: [],
+                error: e.message
+            };
+        }
+    };
+
     return {
         // Module check
         isEnabled,
@@ -693,6 +866,11 @@ define([
         createAllocation,
         markAllocationsConsumed,
         releaseAllocations,
+        allocateFIFO,
+
+        // Consumption
+        recordConsumption,
+        reverseConsumption,
 
         // Status management
         updateTallyStatus,
