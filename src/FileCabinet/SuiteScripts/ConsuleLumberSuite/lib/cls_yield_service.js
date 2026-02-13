@@ -589,6 +589,99 @@ define([
         };
     };
 
+    /**
+     * Create a yield alert for significant variances
+     *
+     * @param {Object} params - Alert parameters
+     * @param {number} params.yieldRegisterId - Yield register ID
+     * @param {string} params.alertType - Type of alert (WARNING, CRITICAL)
+     * @param {string} params.message - Alert message
+     * @param {number} [params.variancePct] - Variance percentage
+     * @returns {Object} Result with success status
+     */
+    const createAlert = (params) => {
+        try {
+            const { yieldRegisterId, alertType, message, variancePct } = params;
+
+            // Log the alert
+            log.audit({
+                title: `CLS Yield Alert - ${alertType}`,
+                details: JSON.stringify({
+                    yieldRegisterId,
+                    alertType,
+                    message,
+                    variancePct,
+                    timestamp: new Date().toISOString()
+                })
+            });
+
+            // Could be extended to send emails or create task records
+            return {
+                success: true,
+                alertType,
+                message
+            };
+
+        } catch (e) {
+            log.error({
+                title: 'CLS Yield Service - createAlert',
+                details: e.message
+            });
+            return {
+                success: false,
+                error: e.message
+            };
+        }
+    };
+
+    /**
+     * Log a yield adjustment
+     *
+     * @param {Object} params - Adjustment parameters
+     * @param {number} params.yieldRegisterId - Yield register ID
+     * @param {number} params.previousValue - Previous yield value
+     * @param {number} params.newValue - New yield value
+     * @param {string} params.reason - Reason for adjustment
+     * @param {number} [params.adjustedBy] - User who made adjustment
+     * @returns {Object} Result with success status
+     */
+    const logAdjustment = (params) => {
+        try {
+            const { yieldRegisterId, previousValue, newValue, reason, adjustedBy } = params;
+
+            // Log the adjustment
+            log.audit({
+                title: 'CLS Yield Adjustment',
+                details: JSON.stringify({
+                    yieldRegisterId,
+                    previousValue,
+                    newValue,
+                    change: newValue - previousValue,
+                    reason,
+                    adjustedBy,
+                    timestamp: new Date().toISOString()
+                })
+            });
+
+            return {
+                success: true,
+                yieldRegisterId,
+                previousValue,
+                newValue
+            };
+
+        } catch (e) {
+            log.error({
+                title: 'CLS Yield Service - logAdjustment',
+                details: e.message
+            });
+            return {
+                success: false,
+                error: e.message
+            };
+        }
+    };
+
     return {
         // Module checks
         isYieldEnabled,
@@ -611,6 +704,10 @@ define([
 
         // Defaults
         getItemDefaultYield,
-        getItemDefaultWaste
+        getItemDefaultWaste,
+
+        // Alerts and logging
+        createAlert,
+        logAdjustment
     };
 });
