@@ -1,0 +1,16 @@
+<usereventscript scriptid="customscript_cls_salesorder_ue">
+    <name>CLS Sales Order UE</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/sales/cls_salesorder_ue.js]</scriptfile>
+    <description>User Event for Sales Order - BF calculations</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+    <scriptdeployments>
+        <scriptdeployment scriptid="customdeploy_cls_salesorder_ue">
+            <recordtype>salesorder</recordtype>
+            <status>RELEASED</status>
+            <isdeployed>T</isdeployed>
+            <allroles>T</allroles>
+            <loglevel>DEBUG</loglevel>
+        </scriptdeployment>
+    </scriptdeployments>
+</usereventscript>

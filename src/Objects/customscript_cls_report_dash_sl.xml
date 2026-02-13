@@ -1,0 +1,16 @@
+<suitelet scriptid="customscript_cls_report_dash_sl">
+    <name>CLS Report Dashboard</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/reporting/cls_report_dashboard_sl.js]</scriptfile>
+    <description>LumberSuite reporting dashboard</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+    <scriptdeployments>
+        <scriptdeployment scriptid="customdeploy_cls_report_dash_sl">
+            <status>RELEASED</status>
+            <isdeployed>T</isdeployed>
+            <allroles>T</allroles>
+            <loglevel>DEBUG</loglevel>
+            <title>LumberSuite Reports</title>
+        </scriptdeployment>
+    </scriptdeployments>
+</suitelet>

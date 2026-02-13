@@ -1,0 +1,16 @@
+<usereventscript scriptid="customscript_cls_if_ue">
+    <name>CLS Item Fulfillment UE</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/sales/cls_itemfulfillment_ue.js]</scriptfile>
+    <description>User Event for Item Fulfillment</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+    <scriptdeployments>
+        <scriptdeployment scriptid="customdeploy_cls_if_ue">
+            <recordtype>itemfulfillment</recordtype>
+            <status>RELEASED</status>
+            <isdeployed>T</isdeployed>
+            <allroles>T</allroles>
+            <loglevel>DEBUG</loglevel>
+        </scriptdeployment>
+    </scriptdeployments>
+</usereventscript>

@@ -1,0 +1,16 @@
+<usereventscript scriptid="customscript_cls_estimate_ue">
+    <name>CLS Estimate UE</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/sales/cls_estimate_ue.js]</scriptfile>
+    <description>User Event for Estimate - BF calculations</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+    <scriptdeployments>
+        <scriptdeployment scriptid="customdeploy_cls_estimate_ue">
+            <recordtype>estimate</recordtype>
+            <status>RELEASED</status>
+            <isdeployed>T</isdeployed>
+            <allroles>T</allroles>
+            <loglevel>DEBUG</loglevel>
+        </scriptdeployment>
+    </scriptdeployments>
+</usereventscript>

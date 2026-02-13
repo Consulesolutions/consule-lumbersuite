@@ -1,0 +1,16 @@
+<suitelet scriptid="customscript_cls_repack_sl">
+    <name>CLS Repack Wizard</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/repack/cls_repack_wizard_sl.js]</scriptfile>
+    <description>Repack order wizard</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+    <scriptdeployments>
+        <scriptdeployment scriptid="customdeploy_cls_repack_sl">
+            <status>RELEASED</status>
+            <isdeployed>T</isdeployed>
+            <allroles>T</allroles>
+            <loglevel>DEBUG</loglevel>
+            <title>Repack Wizard</title>
+        </scriptdeployment>
+    </scriptdeployments>
+</suitelet>

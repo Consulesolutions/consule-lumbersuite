@@ -1,0 +1,16 @@
+<suitelet scriptid="customscript_cls_report_gen_sl">
+    <name>CLS Report Generator</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/reporting/cls_report_generator_sl.js]</scriptfile>
+    <description>Custom report generator</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+    <scriptdeployments>
+        <scriptdeployment scriptid="customdeploy_cls_report_gen_sl">
+            <status>RELEASED</status>
+            <isdeployed>T</isdeployed>
+            <allroles>T</allroles>
+            <loglevel>DEBUG</loglevel>
+            <title>Report Generator</title>
+        </scriptdeployment>
+    </scriptdeployments>
+</suitelet>

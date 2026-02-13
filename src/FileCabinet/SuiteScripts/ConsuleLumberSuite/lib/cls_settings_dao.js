@@ -369,6 +369,35 @@ define([
     };
 
     /**
+     * Check if Margin Analysis is enabled
+     * Uses Advanced Reporting setting as this is a sub-feature
+     * @returns {boolean}
+     */
+    const isMarginAnalysisEnabled = () => {
+        return isAdvReportingEnabled();
+    };
+
+    /**
+     * Check if Feature is enabled (generic checker)
+     * @param {string} featureName - Feature name
+     * @returns {boolean}
+     */
+    const isFeatureEnabled = (featureName) => {
+        switch (featureName.toLowerCase()) {
+            case 'yield': return isYieldEnabled();
+            case 'waste': return isWasteEnabled();
+            case 'tally': return isTallyEnabled();
+            case 'repack': return isRepackEnabled();
+            case 'dynamic_uom': return isDynamicUomEnabled();
+            case 'grade': return isGradeEnabled();
+            case 'moisture': return isMoistureEnabled();
+            case 'margin_analysis': return isMarginAnalysisEnabled();
+            case 'adv_report': return isAdvReportingEnabled();
+            default: return false;
+        }
+    };
+
+    /**
      * Check if Tally FIFO is enforced
      * @returns {boolean}
      */
@@ -425,6 +454,41 @@ define([
         const settings = getSettings();
         const value = parseInt(settings.BF_PRECISION, 10);
         return isNaN(value) ? Constants.DEFAULTS.BF_PRECISION : value;
+    };
+
+    /**
+     * Get the default yield percentage (alias for getDefaultYield)
+     * @returns {number} Yield percentage (0-100)
+     */
+    const getDefaultYieldPercentage = () => {
+        return getDefaultYield();
+    };
+
+    /**
+     * Get admin email for notifications
+     * @returns {string|null} Admin email address
+     */
+    const getAdminEmail = () => {
+        const settings = getSettings();
+        return settings.ADMIN_EMAIL || null;
+    };
+
+    /**
+     * Check if auto-correct is enabled for yield calculations
+     * @returns {boolean}
+     */
+    const isAutoCorrectEnabled = () => {
+        // Default to true for automatic corrections
+        return true;
+    };
+
+    /**
+     * Check if consumption logging is enabled
+     * Uses yield tracking as the indicator
+     * @returns {boolean}
+     */
+    const isConsumptionLogEnabled = () => {
+        return isYieldEnabled();
     };
 
     // ============================================
@@ -507,14 +571,20 @@ define([
         isMoistureEnabled,
         isWoOverrideAllowed,
         isAdvReportingEnabled,
+        isMarginAnalysisEnabled,
+        isFeatureEnabled,
         isTallyFifoEnforced,
         isAutoCreateTallyEnabled,
         areDimensionsRequired,
 
         // Default values
         getDefaultYield,
+        getDefaultYieldPercentage,
         getDefaultWaste,
         getBFPrecision,
+        getAdminEmail,
+        isAutoCorrectEnabled,
+        isConsumptionLogEnabled,
 
         // Status and validation
         getModuleStatus,

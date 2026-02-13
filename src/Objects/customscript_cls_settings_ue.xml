@@ -1,0 +1,16 @@
+<usereventscript scriptid="customscript_cls_settings_ue">
+    <name>CLS Settings UE</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/control/cls_settings_ue.js]</scriptfile>
+    <description>User Event for CLS Settings record</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+    <scriptdeployments>
+        <scriptdeployment scriptid="customdeploy_cls_settings_ue">
+            <recordtype>[scriptid=customrecord_cls_settings]</recordtype>
+            <status>RELEASED</status>
+            <isdeployed>T</isdeployed>
+            <allroles>T</allroles>
+            <loglevel>DEBUG</loglevel>
+        </scriptdeployment>
+    </scriptdeployments>
+</usereventscript>

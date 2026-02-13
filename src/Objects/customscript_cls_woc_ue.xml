@@ -1,0 +1,16 @@
+<usereventscript scriptid="customscript_cls_woc_ue">
+    <name>CLS WO Completion UE</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/workorder/cls_wocompletion_ue.js]</scriptfile>
+    <description>User Event for Work Order Completion - yield recording</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+    <scriptdeployments>
+        <scriptdeployment scriptid="customdeploy_cls_woc_ue">
+            <recordtype>workordercompletion</recordtype>
+            <status>RELEASED</status>
+            <isdeployed>T</isdeployed>
+            <allroles>T</allroles>
+            <loglevel>DEBUG</loglevel>
+        </scriptdeployment>
+    </scriptdeployments>
+</usereventscript>

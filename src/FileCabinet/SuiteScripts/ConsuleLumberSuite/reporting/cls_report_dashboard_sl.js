@@ -20,7 +20,7 @@ define([
     'N/format',
     'N/url',
     '../lib/cls_settings_dao',
-    '../lib/cls_lumber_constants'
+    '../lib/cls_constants'
 ], function(
     serverWidget,
     search,

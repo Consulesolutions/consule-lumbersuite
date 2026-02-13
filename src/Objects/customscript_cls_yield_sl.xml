@@ -1,0 +1,16 @@
+<suitelet scriptid="customscript_cls_yield_sl">
+    <name>CLS Yield Analysis</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/yield/cls_yield_analysis_sl.js]</scriptfile>
+    <description>Yield analysis and reporting</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+    <scriptdeployments>
+        <scriptdeployment scriptid="customdeploy_cls_yield_sl">
+            <status>RELEASED</status>
+            <isdeployed>T</isdeployed>
+            <allroles>T</allroles>
+            <loglevel>DEBUG</loglevel>
+            <title>Yield Analysis</title>
+        </scriptdeployment>
+    </scriptdeployments>
+</suitelet>

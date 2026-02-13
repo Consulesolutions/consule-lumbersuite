@@ -1,0 +1,16 @@
+<usereventscript scriptid="customscript_cls_workorder_ue">
+    <name>CLS Work Order UE</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/workorder/cls_workorder_ue.js]</scriptfile>
+    <description>User Event for Work Order - BF and yield tracking</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+    <scriptdeployments>
+        <scriptdeployment scriptid="customdeploy_cls_workorder_ue">
+            <recordtype>workorder</recordtype>
+            <status>RELEASED</status>
+            <isdeployed>T</isdeployed>
+            <allroles>T</allroles>
+            <loglevel>DEBUG</loglevel>
+        </scriptdeployment>
+    </scriptdeployments>
+</usereventscript>

@@ -1,0 +1,16 @@
+<usereventscript scriptid="customscript_cls_repack_ue">
+    <name>CLS Repack Order UE</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/repack/cls_repack_workorder_ue.js]</scriptfile>
+    <description>User Event for Repack Order record</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+    <scriptdeployments>
+        <scriptdeployment scriptid="customdeploy_cls_repack_ue">
+            <recordtype>[scriptid=customrecord_cls_repack]</recordtype>
+            <status>RELEASED</status>
+            <isdeployed>T</isdeployed>
+            <allroles>T</allroles>
+            <loglevel>DEBUG</loglevel>
+        </scriptdeployment>
+    </scriptdeployments>
+</usereventscript>

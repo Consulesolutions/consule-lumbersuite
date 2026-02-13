@@ -19,9 +19,9 @@ define([
     'N/ui/serverWidget',
     'N/runtime',
     'N/format',
-    '../lib/cls_uom_engine',
+    '../lib/cls_conversion_engine',
     '../lib/cls_settings_dao',
-    '../lib/cls_lumber_constants'
+    '../lib/cls_constants'
 ], function(
     record,
     search,

@@ -1,0 +1,7 @@
+<mapreducescript scriptid="customscript_cls_wo_consumption_mr">
+    <name>CLS WO Consumption MR</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/workorder/cls_wo_consumption_mr.js]</scriptfile>
+    <description>Processes work order consumption and updates tally allocations</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+</mapreducescript>

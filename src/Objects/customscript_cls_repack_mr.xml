@@ -1,0 +1,7 @@
+<mapreducescript scriptid="customscript_cls_repack_mr">
+    <name>CLS Repack Processing MR</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/repack/cls_repack_processing_mr.js]</scriptfile>
+    <description>Processes repack orders and updates inventory</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+</mapreducescript>

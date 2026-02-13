@@ -1,3 +1,4 @@
 {
-	"defaultAuthId": "lumbersuite"
+	"defaultAuthId": "lumbersuite",
+	"accountSpecificValues": "WARNING"
 }

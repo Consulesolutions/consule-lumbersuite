@@ -1,0 +1,16 @@
+<usereventscript scriptid="customscript_cls_yield_ue">
+    <name>CLS Yield Register UE</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/yield/cls_yield_register_ue.js]</scriptfile>
+    <description>User Event for Yield Register record</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+    <scriptdeployments>
+        <scriptdeployment scriptid="customdeploy_cls_yield_ue">
+            <recordtype>[scriptid=customrecord_cls_yield_reg]</recordtype>
+            <status>RELEASED</status>
+            <isdeployed>T</isdeployed>
+            <allroles>T</allroles>
+            <loglevel>DEBUG</loglevel>
+        </scriptdeployment>
+    </scriptdeployments>
+</usereventscript>

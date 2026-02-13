@@ -1,0 +1,7 @@
+<mapreducescript scriptid="customscript_cls_tally_recon_mr">
+    <name>CLS Tally Reconciliation MR</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/tally/cls_tally_reconciliation_mr.js]</scriptfile>
+    <description>Reconciles tally sheet balances</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+</mapreducescript>

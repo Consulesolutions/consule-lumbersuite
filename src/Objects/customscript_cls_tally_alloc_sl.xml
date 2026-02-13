@@ -1,0 +1,16 @@
+<suitelet scriptid="customscript_cls_tally_alloc_sl">
+    <name>CLS Tally Allocation</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/tally/cls_tally_allocation_sl.js]</scriptfile>
+    <description>Tally allocation wizard and search</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+    <scriptdeployments>
+        <scriptdeployment scriptid="customdeploy_cls_tally_alloc_sl">
+            <status>RELEASED</status>
+            <isdeployed>T</isdeployed>
+            <allroles>T</allroles>
+            <loglevel>DEBUG</loglevel>
+            <title>Tally Allocation</title>
+        </scriptdeployment>
+    </scriptdeployments>
+</suitelet>

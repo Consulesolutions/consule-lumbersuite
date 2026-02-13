@@ -1,0 +1,7 @@
+<mapreducescript scriptid="customscript_cls_yield_analytics_mr">
+    <name>CLS Yield Analytics MR</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/yield/cls_yield_analytics_mr.js]</scriptfile>
+    <description>Calculates yield analytics and summaries</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+</mapreducescript>

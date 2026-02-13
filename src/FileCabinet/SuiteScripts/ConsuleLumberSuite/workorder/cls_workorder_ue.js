@@ -48,7 +48,8 @@ define([
     Logger
 ) => {
 
-    const RECORD_TYPE = record.Type.WORK_ORDER;
+    // Note: Cannot access record.Type during define() - use string literal
+    const RECORD_TYPE = 'workorder';
     const ITEM_FIELDS = Constants.ITEM_FIELDS;
     const LINE_FIELDS = Constants.LINE_FIELDS;
     const BODY_FIELDS = Constants.BODY_FIELDS;
@@ -56,7 +57,11 @@ define([
     const PROCESS_TYPES = Constants.PROCESS_TYPES;
     const ASSEMBLY_TYPES = Constants.ASSEMBLY_TYPES;
 
-    const log = Logger.createLogger('WorkOrder.UE');
+    let log = null;
+    const getLogger = () => {
+        if (!log) log = Logger.createLogger('WorkOrder.UE');
+        return log;
+    };
 
     /**
      * beforeLoad - Configure form based on enabled features
@@ -77,7 +82,7 @@ define([
                 return;
             }
 
-            log.debug('beforeLoad', { type, recordId: newRecord.id });
+            getLogger().debug('beforeLoad', { type, recordId: newRecord.id });
 
             // Configure form fields based on enabled modules
             configureFormFields(form);
@@ -97,7 +102,7 @@ define([
             }
 
         } catch (e) {
-            log.error('beforeLoad', e);
+            getLogger().error('beforeLoad', e);
         }
     };
 
@@ -152,7 +157,7 @@ define([
             }
 
         } catch (e) {
-            log.error('addProcessTypeFields', e);
+            getLogger().error('addProcessTypeFields', e);
         }
     };
 
@@ -194,7 +199,7 @@ define([
             bfField.defaultValue = byproductTotals.totalBF;
 
         } catch (e) {
-            log.error('addByproductSummary', e);
+            getLogger().error('addByproductSummary', e);
         }
     };
 
@@ -242,7 +247,7 @@ define([
             }
 
         } catch (e) {
-            log.error('configureFormFields', e);
+            getLogger().error('configureFormFields', e);
         }
     };
 
@@ -295,7 +300,7 @@ define([
         try {
             form.clientScriptModulePath = '../workorder/cls_workorder_cs.js';
         } catch (e) {
-            log.error('addClientScript', e);
+            getLogger().error('addClientScript', e);
         }
     };
 
@@ -332,11 +337,11 @@ define([
                 return;
             }
 
-            log.debug('beforeSubmit', { type, recordId: newRecord.id });
+            getLogger().debug('beforeSubmit', { type, recordId: newRecord.id });
 
             // Check if dynamic UOM is enabled
             if (!SettingsDAO.isDynamicUomEnabled()) {
-                log.debug('beforeSubmit', 'Dynamic UOM disabled - skipping BF calculations');
+                getLogger().debug('beforeSubmit', 'Dynamic UOM disabled - skipping BF calculations');
                 return;
             }
 
@@ -347,11 +352,11 @@ define([
             const result = processWorkOrderLines(newRecord);
 
             if (!result.success) {
-                log.error('beforeSubmit', result.errors);
+                getLogger().error('beforeSubmit', result.errors);
                 // Don't throw error - allow standard NetSuite behavior
             }
 
-            log.audit('beforeSubmit', {
+            getLogger().audit('beforeSubmit', {
                 recordId: newRecord.id,
                 totalBF: result.totalBF,
                 linesProcessed: result.linesProcessed,
@@ -360,7 +365,7 @@ define([
             });
 
         } catch (e) {
-            log.error('beforeSubmit', e);
+            getLogger().error('beforeSubmit', e);
         }
     };
 
@@ -404,7 +409,7 @@ define([
                     value: processTarget.targetYield
                 });
 
-                log.debug('applyProcessTargetYield', {
+                getLogger().debug('applyProcessTargetYield', {
                     processType,
                     speciesId,
                     targetYield: processTarget.targetYield,
@@ -415,7 +420,7 @@ define([
             }
 
         } catch (e) {
-            log.error('applyProcessTargetYield', e);
+            getLogger().error('applyProcessTargetYield', e);
         }
     };
 
@@ -669,16 +674,16 @@ define([
             }
 
             const woId = newRecord.id;
-            log.debug('afterSubmit', { type, recordId: woId });
+            getLogger().debug('afterSubmit', { type, recordId: woId });
 
             // Create tally allocations if enabled
             if (SettingsDAO.isTallyEnabled()) {
                 const allocationResult = TallyService.createAllocationsForWorkOrder(woId);
 
                 if (!allocationResult.success) {
-                    log.error('afterSubmit - Tally Allocation', allocationResult.errors);
+                    getLogger().error('afterSubmit - Tally Allocation', allocationResult.errors);
                 } else {
-                    log.audit('afterSubmit - Tally Allocation', {
+                    getLogger().audit('afterSubmit - Tally Allocation', {
                         workOrderId: woId,
                         allocationsCreated: allocationResult.allocations.length,
                         totalAllocated: allocationResult.totalAllocated
@@ -690,7 +695,7 @@ define([
             logConsumption(newRecord);
 
         } catch (e) {
-            log.error('afterSubmit', e);
+            getLogger().error('afterSubmit', e);
         }
     };
 
@@ -764,7 +769,7 @@ define([
             }
 
         } catch (e) {
-            log.error('logConsumption', e);
+            getLogger().error('logConsumption', e);
         }
     };
 
@@ -803,7 +808,7 @@ define([
             });
 
         } catch (e) {
-            log.error('createConsumptionLogEntry', e);
+            getLogger().error('createConsumptionLogEntry', e);
         }
     };
 

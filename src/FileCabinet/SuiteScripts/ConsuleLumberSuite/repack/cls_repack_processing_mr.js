@@ -20,7 +20,7 @@ define([
     'N/email',
     'N/format',
     '../lib/cls_settings_dao',
-    '../lib/cls_lumber_constants'
+    '../lib/cls_constants'
 ], function(
     record,
     search,

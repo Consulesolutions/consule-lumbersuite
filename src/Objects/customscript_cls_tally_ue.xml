@@ -1,0 +1,16 @@
+<usereventscript scriptid="customscript_cls_tally_ue">
+    <name>CLS Tally Sheet UE</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/tally/cls_tally_sheet_ue.js]</scriptfile>
+    <description>User Event for Tally Sheet record</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+    <scriptdeployments>
+        <scriptdeployment scriptid="customdeploy_cls_tally_ue">
+            <recordtype>[scriptid=customrecord_cls_tally]</recordtype>
+            <status>RELEASED</status>
+            <isdeployed>T</isdeployed>
+            <allroles>T</allroles>
+            <loglevel>DEBUG</loglevel>
+        </scriptdeployment>
+    </scriptdeployments>
+</usereventscript>

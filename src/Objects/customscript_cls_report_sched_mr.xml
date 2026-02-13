@@ -1,0 +1,7 @@
+<mapreducescript scriptid="customscript_cls_report_sched_mr">
+    <name>CLS Report Scheduler MR</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/reporting/cls_report_scheduler_mr.js]</scriptfile>
+    <description>Scheduled report generation and distribution</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+</mapreducescript>

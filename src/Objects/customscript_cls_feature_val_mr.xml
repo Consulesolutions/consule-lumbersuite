@@ -1,0 +1,7 @@
+<mapreducescript scriptid="customscript_cls_feature_val_mr">
+    <name>CLS Feature Validator MR</name>
+    <scriptfile>[/SuiteScripts/ConsuleLumberSuite/control/cls_feature_validator_mr.js]</scriptfile>
+    <description>Validates feature configuration and data integrity</description>
+    <isinactive>F</isinactive>
+    <notifyowner>T</notifyowner>
+</mapreducescript>
