@@ -1,12 +1,9 @@
-<custombodyfield scriptid="custbody_cls_assembly_type">
+<transactionbodycustomfield scriptid="custbody_cls_assembly_type">
     <label>Assembly Type</label>
     <description>Type of assembly operation for this work order</description>
     <fieldtype>SELECT</fieldtype>
     <selectrecordtype>[scriptid=customlist_cls_assembly_type]</selectrecordtype>
     <storevalue>T</storevalue>
     <showinlist>T</showinlist>
-    <isformula>F</isformula>
-    <bodycustomfield>
-        <transactionform>WORKORDER</transactionform>
-    </bodycustomfield>
-</custombodyfield>
+    <appliestoworkorder>T</appliestoworkorder>
+</transactionbodycustomfield>
