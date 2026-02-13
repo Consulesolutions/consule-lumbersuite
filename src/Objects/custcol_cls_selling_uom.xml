@@ -1,0 +1,11 @@
+<transactioncolumncustomfield scriptid="custcol_cls_selling_uom">
+    <label>Selling UOM</label>
+    <fieldtype>SELECT</fieldtype>
+    <selectrecordtype>[scriptid=customlist_cls_uom_codes]</selectrecordtype>
+    <description>Unit of measure for display/selling</description>
+    <appliestosalesorder>T</appliestosalesorder>
+    <appliestoestimate>T</appliestoestimate>
+    <appliestoinvoice>T</appliestoinvoice>
+    <appliestoitemfulfillment>T</appliestoitemfulfillment>
+    <colitem>T</colitem>
+</transactioncolumncustomfield>

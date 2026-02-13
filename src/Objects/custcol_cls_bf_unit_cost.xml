@@ -1,0 +1,8 @@
+<transactioncolumncustomfield scriptid="custcol_cls_bf_unit_cost">
+    <label>BF Unit Cost</label>
+    <fieldtype>CURRENCY</fieldtype>
+    <description>Cost per board foot</description>
+    <appliestosalesorder>T</appliestosalesorder>
+    <appliestoestimate>T</appliestoestimate>
+    <colitem>T</colitem>
+</transactioncolumncustomfield>

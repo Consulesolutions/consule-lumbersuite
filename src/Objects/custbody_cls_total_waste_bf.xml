@@ -1,0 +1,7 @@
+<transactionbodycustomfield scriptid="custbody_cls_total_waste_bf">
+    <label>Total Waste BF</label>
+    <fieldtype>FLOAT</fieldtype>
+    <description>Total waste board feet</description>
+    <storevalue>T</storevalue>
+    <appliestoworkorder>T</appliestoworkorder>
+</transactionbodycustomfield>

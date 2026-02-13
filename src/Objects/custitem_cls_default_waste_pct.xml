@@ -1,0 +1,7 @@
+<itemcustomfield scriptid="custitem_cls_default_waste_pct">
+    <label>Default Waste %</label>
+    <fieldtype>PERCENT</fieldtype>
+    <description>Expected waste percentage for this item</description>
+    <appliestoinventory>T</appliestoinventory>
+    <appliestoassembly>T</appliestoassembly>
+</itemcustomfield>

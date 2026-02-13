@@ -1,0 +1,11 @@
+<transactioncolumncustomfield scriptid="custcol_cls_calculated_bf">
+    <label>Calculated BF</label>
+    <fieldtype>FLOAT</fieldtype>
+    <description>Calculated board feet for this line</description>
+    <appliestosalesorder>T</appliestosalesorder>
+    <appliestoestimate>T</appliestoestimate>
+    <appliestoworkorder>T</appliestoworkorder>
+    <appliestoinvoice>T</appliestoinvoice>
+    <appliestoitemfulfillment>T</appliestoitemfulfillment>
+    <colitem>T</colitem>
+</transactioncolumncustomfield>

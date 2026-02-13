@@ -1,0 +1,8 @@
+<itemcustomfield scriptid="custitem_cls_nominal_width">
+    <label>Nominal Width (in)</label>
+    <fieldtype>FLOAT</fieldtype>
+    <description>Nominal width in inches</description>
+    <appliestoinventory>T</appliestoinventory>
+    <appliestoassembly>T</appliestoassembly>
+    <appliestononinventory>T</appliestononinventory>
+</itemcustomfield>

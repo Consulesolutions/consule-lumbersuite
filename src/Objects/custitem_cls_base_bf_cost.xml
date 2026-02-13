@@ -1,0 +1,8 @@
+<itemcustomfield scriptid="custitem_cls_base_bf_cost">
+    <label>Base BF Cost</label>
+    <fieldtype>CURRENCY</fieldtype>
+    <description>Base cost per board foot</description>
+    <appliestoinventory>T</appliestoinventory>
+    <appliestoassembly>T</appliestoassembly>
+    <appliestononinventory>T</appliestononinventory>
+</itemcustomfield>

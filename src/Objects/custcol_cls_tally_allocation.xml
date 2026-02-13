@@ -1,0 +1,8 @@
+<transactioncolumncustomfield scriptid="custcol_cls_tally_allocation">
+    <label>Tally Allocation</label>
+    <fieldtype>SELECT</fieldtype>
+    <selectrecordtype>[scriptid=customrecord_cls_tally_alloc]</selectrecordtype>
+    <description>Linked tally allocation</description>
+    <appliestoworkorder>T</appliestoworkorder>
+    <colcomponent>T</colcomponent>
+</transactioncolumncustomfield>

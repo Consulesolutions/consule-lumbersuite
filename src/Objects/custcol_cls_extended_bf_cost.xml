@@ -1,0 +1,8 @@
+<transactioncolumncustomfield scriptid="custcol_cls_extended_bf_cost">
+    <label>Extended BF Cost</label>
+    <fieldtype>CURRENCY</fieldtype>
+    <description>Total cost (BF x Unit Cost)</description>
+    <appliestosalesorder>T</appliestosalesorder>
+    <appliestoestimate>T</appliestoestimate>
+    <colitem>T</colitem>
+</transactioncolumncustomfield>

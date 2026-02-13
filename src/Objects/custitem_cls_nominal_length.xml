@@ -1,0 +1,8 @@
+<itemcustomfield scriptid="custitem_cls_nominal_length">
+    <label>Nominal Length (ft)</label>
+    <fieldtype>FLOAT</fieldtype>
+    <description>Nominal length in feet</description>
+    <appliestoinventory>T</appliestoinventory>
+    <appliestoassembly>T</appliestoassembly>
+    <appliestononinventory>T</appliestononinventory>
+</itemcustomfield>

@@ -1,0 +1,8 @@
+<transactioncolumncustomfield scriptid="custcol_cls_waste_reason">
+    <label>Waste Reason</label>
+    <fieldtype>SELECT</fieldtype>
+    <selectrecordtype>[scriptid=customrecord_cls_waste_rsn]</selectrecordtype>
+    <description>Reason for waste/variance</description>
+    <appliestoworkorder>T</appliestoworkorder>
+    <colcomponent>T</colcomponent>
+</transactioncolumncustomfield>

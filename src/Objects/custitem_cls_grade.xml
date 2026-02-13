@@ -1,0 +1,9 @@
+<itemcustomfield scriptid="custitem_cls_grade">
+    <label>Grade</label>
+    <fieldtype>SELECT</fieldtype>
+    <selectrecordtype>[scriptid=customrecord_cls_grade]</selectrecordtype>
+    <description>Default lumber grade for this item</description>
+    <appliestoinventory>T</appliestoinventory>
+    <appliestoassembly>T</appliestoassembly>
+    <appliestononinventory>T</appliestononinventory>
+</itemcustomfield>

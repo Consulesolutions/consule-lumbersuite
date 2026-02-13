@@ -1,0 +1,7 @@
+<transactioncolumncustomfield scriptid="custcol_cls_waste_bf">
+    <label>Waste BF</label>
+    <fieldtype>FLOAT</fieldtype>
+    <description>Waste BF (Theoretical - Actual)</description>
+    <appliestoworkorder>T</appliestoworkorder>
+    <colcomponent>T</colcomponent>
+</transactioncolumncustomfield>

@@ -1,0 +1,8 @@
+<transactionbodycustomfield scriptid="custbody_cls_linked_tally">
+    <label>Linked Tally</label>
+    <fieldtype>SELECT</fieldtype>
+    <selectrecordtype>[scriptid=customrecord_cls_tally]</selectrecordtype>
+    <description>Primary tally sheet linked to this transaction</description>
+    <storevalue>T</storevalue>
+    <appliestoworkorder>T</appliestoworkorder>
+</transactionbodycustomfield>

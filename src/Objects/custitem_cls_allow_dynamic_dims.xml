@@ -1,0 +1,9 @@
+<itemcustomfield scriptid="custitem_cls_allow_dynamic_dims">
+    <label>Allow Dynamic Dimensions</label>
+    <fieldtype>CHECKBOX</fieldtype>
+    <defaultchecked>F</defaultchecked>
+    <description>Allow users to enter custom dimensions on transactions</description>
+    <appliestoinventory>T</appliestoinventory>
+    <appliestoassembly>T</appliestoassembly>
+    <appliestononinventory>T</appliestononinventory>
+</itemcustomfield>

@@ -1,0 +1,11 @@
+<transactionbodycustomfield scriptid="custbody_cls_total_bf">
+    <label>Total Board Feet</label>
+    <fieldtype>FLOAT</fieldtype>
+    <description>Total calculated board feet for all lines</description>
+    <storevalue>T</storevalue>
+    <appliestosalesorder>T</appliestosalesorder>
+    <appliestoestimate>T</appliestoestimate>
+    <appliestoworkorder>T</appliestoworkorder>
+    <appliestoitemfulfillment>T</appliestoitemfulfillment>
+    <appliestoinvoice>T</appliestoinvoice>
+</transactionbodycustomfield>

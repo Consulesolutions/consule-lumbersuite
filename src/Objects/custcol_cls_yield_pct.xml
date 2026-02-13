@@ -1,0 +1,7 @@
+<transactioncolumncustomfield scriptid="custcol_cls_yield_pct">
+    <label>Yield %</label>
+    <fieldtype>PERCENT</fieldtype>
+    <description>Yield percentage (Actual/Theoretical)</description>
+    <appliestoworkorder>T</appliestoworkorder>
+    <colcomponent>T</colcomponent>
+</transactioncolumncustomfield>

@@ -1,0 +1,9 @@
+<transactioncolumncustomfield scriptid="custcol_cls_grade_override">
+    <label>Grade Override</label>
+    <fieldtype>SELECT</fieldtype>
+    <selectrecordtype>[scriptid=customrecord_cls_grade]</selectrecordtype>
+    <description>Override item default grade for this line</description>
+    <appliestosalesorder>T</appliestosalesorder>
+    <appliestoestimate>T</appliestoestimate>
+    <colitem>T</colitem>
+</transactioncolumncustomfield>

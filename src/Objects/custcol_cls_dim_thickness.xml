@@ -1,0 +1,10 @@
+<transactioncolumncustomfield scriptid="custcol_cls_dim_thickness">
+    <label>Thickness (in)</label>
+    <fieldtype>FLOAT</fieldtype>
+    <description>Actual thickness in inches</description>
+    <appliestosalesorder>T</appliestosalesorder>
+    <appliestoestimate>T</appliestoestimate>
+    <appliestoworkorder>T</appliestoworkorder>
+    <colitem>T</colitem>
+    <colcomponent>T</colcomponent>
+</transactioncolumncustomfield>

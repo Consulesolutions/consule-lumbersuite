@@ -1,0 +1,9 @@
+<transactionbodycustomfield scriptid="custbody_cls_conversion_locked">
+    <label>Conversion Locked</label>
+    <fieldtype>CHECKBOX</fieldtype>
+    <defaultchecked>F</defaultchecked>
+    <description>Prevent automatic recalculation of BF values</description>
+    <storevalue>T</storevalue>
+    <appliestosalesorder>T</appliestosalesorder>
+    <appliestoestimate>T</appliestoestimate>
+</transactionbodycustomfield>

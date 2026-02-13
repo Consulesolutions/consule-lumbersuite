@@ -1,0 +1,7 @@
+<itemcustomfield scriptid="custitem_cls_pieces_per_bundle">
+    <label>Pieces Per Bundle</label>
+    <fieldtype>INTEGER</fieldtype>
+    <description>Number of pieces per bundle for this item</description>
+    <appliestoinventory>T</appliestoinventory>
+    <appliestoassembly>T</appliestoassembly>
+</itemcustomfield>

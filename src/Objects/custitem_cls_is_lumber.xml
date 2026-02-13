@@ -1,0 +1,9 @@
+<itemcustomfield scriptid="custitem_cls_is_lumber">
+    <label>Is Lumber Item</label>
+    <fieldtype>CHECKBOX</fieldtype>
+    <defaultchecked>F</defaultchecked>
+    <description>Check if this item is a lumber product requiring BF calculations</description>
+    <appliestoinventory>T</appliestoinventory>
+    <appliestoassembly>T</appliestoassembly>
+    <appliestononinventory>T</appliestononinventory>
+</itemcustomfield>

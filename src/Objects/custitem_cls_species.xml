@@ -1,0 +1,9 @@
+<itemcustomfield scriptid="custitem_cls_species">
+    <label>Species</label>
+    <fieldtype>SELECT</fieldtype>
+    <selectrecordtype>[scriptid=customrecord_cls_species]</selectrecordtype>
+    <description>Lumber species for this item</description>
+    <appliestoinventory>T</appliestoinventory>
+    <appliestoassembly>T</appliestoassembly>
+    <appliestononinventory>T</appliestononinventory>
+</itemcustomfield>

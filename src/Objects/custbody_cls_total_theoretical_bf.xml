@@ -1,0 +1,7 @@
+<transactionbodycustomfield scriptid="custbody_cls_total_theoretical_bf">
+    <label>Total Theoretical BF</label>
+    <fieldtype>FLOAT</fieldtype>
+    <description>Total theoretical board feet (input)</description>
+    <storevalue>T</storevalue>
+    <appliestoworkorder>T</appliestoworkorder>
+</transactionbodycustomfield>

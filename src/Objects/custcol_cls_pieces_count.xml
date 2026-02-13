@@ -1,0 +1,10 @@
+<transactioncolumncustomfield scriptid="custcol_cls_pieces_count">
+    <label>Pieces Count</label>
+    <fieldtype>INTEGER</fieldtype>
+    <description>Number of pieces</description>
+    <appliestosalesorder>T</appliestosalesorder>
+    <appliestoestimate>T</appliestoestimate>
+    <appliestoworkorder>T</appliestoworkorder>
+    <colitem>T</colitem>
+    <colcomponent>T</colcomponent>
+</transactioncolumncustomfield>

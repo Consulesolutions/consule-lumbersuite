@@ -1,0 +1,8 @@
+<itemcustomfield scriptid="custitem_cls_nominal_thickness">
+    <label>Nominal Thickness (in)</label>
+    <fieldtype>FLOAT</fieldtype>
+    <description>Nominal thickness in inches</description>
+    <appliestoinventory>T</appliestoinventory>
+    <appliestoassembly>T</appliestoassembly>
+    <appliestononinventory>T</appliestononinventory>
+</itemcustomfield>

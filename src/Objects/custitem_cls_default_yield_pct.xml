@@ -1,0 +1,7 @@
+<itemcustomfield scriptid="custitem_cls_default_yield_pct">
+    <label>Default Yield %</label>
+    <fieldtype>PERCENT</fieldtype>
+    <description>Expected yield percentage for this item</description>
+    <appliestoinventory>T</appliestoinventory>
+    <appliestoassembly>T</appliestoassembly>
+</itemcustomfield>

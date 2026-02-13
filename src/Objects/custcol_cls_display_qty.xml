@@ -1,0 +1,9 @@
+<transactioncolumncustomfield scriptid="custcol_cls_display_qty">
+    <label>Display Qty</label>
+    <fieldtype>FLOAT</fieldtype>
+    <description>Quantity in selling UOM</description>
+    <appliestosalesorder>T</appliestosalesorder>
+    <appliestoestimate>T</appliestoestimate>
+    <appliestoinvoice>T</appliestoinvoice>
+    <colitem>T</colitem>
+</transactioncolumncustomfield>

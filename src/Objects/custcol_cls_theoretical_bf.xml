@@ -1,0 +1,7 @@
+<transactioncolumncustomfield scriptid="custcol_cls_theoretical_bf">
+    <label>Theoretical BF</label>
+    <fieldtype>FLOAT</fieldtype>
+    <description>Expected BF before processing</description>
+    <appliestoworkorder>T</appliestoworkorder>
+    <colcomponent>T</colcomponent>
+</transactioncolumncustomfield>

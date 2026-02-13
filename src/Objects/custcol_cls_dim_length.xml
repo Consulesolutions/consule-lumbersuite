@@ -1,0 +1,10 @@
+<transactioncolumncustomfield scriptid="custcol_cls_dim_length">
+    <label>Length (ft)</label>
+    <fieldtype>FLOAT</fieldtype>
+    <description>Actual length in feet</description>
+    <appliestosalesorder>T</appliestosalesorder>
+    <appliestoestimate>T</appliestoestimate>
+    <appliestoworkorder>T</appliestoworkorder>
+    <colitem>T</colitem>
+    <colcomponent>T</colcomponent>
+</transactioncolumncustomfield>

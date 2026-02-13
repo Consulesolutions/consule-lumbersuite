@@ -1,0 +1,7 @@
+<transactioncolumncustomfield scriptid="custcol_cls_actual_bf">
+    <label>Actual BF</label>
+    <fieldtype>FLOAT</fieldtype>
+    <description>Actual BF after processing</description>
+    <appliestoworkorder>T</appliestoworkorder>
+    <colcomponent>T</colcomponent>
+</transactioncolumncustomfield>

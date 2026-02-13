@@ -1,0 +1,9 @@
+<transactioncolumncustomfield scriptid="custcol_cls_moisture_pct">
+    <label>Moisture %</label>
+    <fieldtype>PERCENT</fieldtype>
+    <description>Moisture content percentage</description>
+    <appliestosalesorder>T</appliestosalesorder>
+    <appliestoworkorder>T</appliestoworkorder>
+    <colitem>T</colitem>
+    <colcomponent>T</colcomponent>
+</transactioncolumncustomfield>
