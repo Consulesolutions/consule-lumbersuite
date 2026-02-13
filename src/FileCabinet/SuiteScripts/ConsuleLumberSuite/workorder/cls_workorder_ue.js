@@ -28,6 +28,7 @@ define([
     '../lib/cls_bf_calculator',
     '../lib/cls_tally_service',
     '../lib/cls_yield_service',
+    '../lib/cls_process_service',
     '../lib/cls_validation',
     '../lib/cls_logger'
 ], (
@@ -42,6 +43,7 @@ define([
     BFCalculator,
     TallyService,
     YieldService,
+    ProcessService,
     Validation,
     Logger
 ) => {
@@ -51,6 +53,8 @@ define([
     const LINE_FIELDS = Constants.LINE_FIELDS;
     const BODY_FIELDS = Constants.BODY_FIELDS;
     const UOM_CODES = Constants.UOM_CODES;
+    const PROCESS_TYPES = Constants.PROCESS_TYPES;
+    const ASSEMBLY_TYPES = Constants.ASSEMBLY_TYPES;
 
     const log = Logger.createLogger('WorkOrder.UE');
 
@@ -78,6 +82,9 @@ define([
             // Configure form fields based on enabled modules
             configureFormFields(form);
 
+            // Add process type group for assembly work orders
+            addProcessTypeFields(form, newRecord, type);
+
             // Add client script for dynamic calculations
             if (type === context.UserEventType.CREATE || type === context.UserEventType.EDIT) {
                 addClientScript(form);
@@ -86,10 +93,108 @@ define([
             // Add conversion reference button for VIEW mode
             if (type === context.UserEventType.VIEW) {
                 addConversionInfoButton(form, newRecord);
+                addByproductSummary(form, newRecord);
             }
 
         } catch (e) {
             log.error('beforeLoad', e);
+        }
+    };
+
+    /**
+     * Add process type fields group to the form
+     *
+     * @param {Form} form
+     * @param {Record} rec
+     * @param {string} type - User event type
+     */
+    const addProcessTypeFields = (form, rec, type) => {
+        try {
+            // Check if this is an assembly item work order
+            const assemblyItemId = rec.getValue({ fieldId: 'assemblyitem' });
+            if (!assemblyItemId) return;
+
+            // Add field group for process settings
+            const processGroup = form.addFieldGroup({
+                id: 'custpage_process_group',
+                label: 'Process Settings'
+            });
+
+            // Add yield target display field (read-only, calculated from process type)
+            if (type === context.UserEventType.VIEW || type === context.UserEventType.EDIT) {
+                const processType = rec.getValue({ fieldId: BODY_FIELDS.PROCESS_TYPE });
+                if (processType) {
+                    const processTarget = ProcessService.getProcessTarget({ processType });
+
+                    if (processTarget.found) {
+                        const targetField = form.addField({
+                            id: 'custpage_process_target_yield',
+                            type: serverWidget.FieldType.PERCENT,
+                            label: 'Process Target Yield',
+                            container: 'custpage_process_group'
+                        });
+                        targetField.updateDisplayType({ displayType: serverWidget.FieldDisplayType.INLINE });
+                        targetField.defaultValue = processTarget.targetYield;
+
+                        // Show expected losses
+                        if (processTarget.kerfLoss > 0 || processTarget.shrinkage > 0 || processTarget.defectRate > 0) {
+                            const lossesField = form.addField({
+                                id: 'custpage_expected_losses',
+                                type: serverWidget.FieldType.TEXT,
+                                label: 'Expected Losses',
+                                container: 'custpage_process_group'
+                            });
+                            lossesField.updateDisplayType({ displayType: serverWidget.FieldDisplayType.INLINE });
+                            lossesField.defaultValue = `Kerf: ${processTarget.kerfLoss}%, Shrinkage: ${processTarget.shrinkage}%, Defects: ${processTarget.defectRate}%`;
+                        }
+                    }
+                }
+            }
+
+        } catch (e) {
+            log.error('addProcessTypeFields', e);
+        }
+    };
+
+    /**
+     * Add by-product summary for VIEW mode
+     *
+     * @param {Form} form
+     * @param {Record} rec
+     */
+    const addByproductSummary = (form, rec) => {
+        try {
+            const workOrderId = rec.id;
+            if (!workOrderId) return;
+
+            const byproductTotals = ProcessService.getByproductTotals(workOrderId);
+            if (byproductTotals.count === 0) return;
+
+            const byproductGroup = form.addFieldGroup({
+                id: 'custpage_byproduct_group',
+                label: 'By-products Summary'
+            });
+
+            const countField = form.addField({
+                id: 'custpage_byproduct_count',
+                type: serverWidget.FieldType.INTEGER,
+                label: 'By-product Records',
+                container: 'custpage_byproduct_group'
+            });
+            countField.updateDisplayType({ displayType: serverWidget.FieldDisplayType.INLINE });
+            countField.defaultValue = byproductTotals.count;
+
+            const bfField = form.addField({
+                id: 'custpage_byproduct_bf',
+                type: serverWidget.FieldType.FLOAT,
+                label: 'Total By-product BF',
+                container: 'custpage_byproduct_group'
+            });
+            bfField.updateDisplayType({ displayType: serverWidget.FieldDisplayType.INLINE });
+            bfField.defaultValue = byproductTotals.totalBF;
+
+        } catch (e) {
+            log.error('addByproductSummary', e);
         }
     };
 
@@ -235,6 +340,9 @@ define([
                 return;
             }
 
+            // Apply process-specific yield target if process type is set
+            applyProcessTargetYield(newRecord);
+
             // Process all item lines
             const result = processWorkOrderLines(newRecord);
 
@@ -246,11 +354,68 @@ define([
             log.audit('beforeSubmit', {
                 recordId: newRecord.id,
                 totalBF: result.totalBF,
-                linesProcessed: result.linesProcessed
+                linesProcessed: result.linesProcessed,
+                processType: newRecord.getValue({ fieldId: BODY_FIELDS.PROCESS_TYPE }),
+                assemblyType: newRecord.getValue({ fieldId: BODY_FIELDS.ASSEMBLY_TYPE })
             });
 
         } catch (e) {
             log.error('beforeSubmit', e);
+        }
+    };
+
+    /**
+     * Apply process-specific yield target to the work order
+     *
+     * @param {Record} rec - Work Order record
+     */
+    const applyProcessTargetYield = (rec) => {
+        try {
+            const processType = rec.getValue({ fieldId: BODY_FIELDS.PROCESS_TYPE });
+            if (!processType) return;
+
+            // Get species from assembly item if available
+            const assemblyItemId = rec.getValue({ fieldId: 'assemblyitem' });
+            let speciesId = null;
+
+            if (assemblyItemId) {
+                try {
+                    const itemLookup = search.lookupFields({
+                        type: search.Type.ASSEMBLY_ITEM,
+                        id: assemblyItemId,
+                        columns: [ITEM_FIELDS.SPECIES]
+                    });
+                    speciesId = itemLookup[ITEM_FIELDS.SPECIES] ? itemLookup[ITEM_FIELDS.SPECIES][0]?.value : null;
+                } catch (e) {
+                    // Species field may not exist on item
+                }
+            }
+
+            // Get process target
+            const processTarget = ProcessService.getProcessTarget({
+                processType: processType,
+                speciesId: speciesId
+            });
+
+            if (processTarget.found) {
+                // Set target yield on work order
+                rec.setValue({
+                    fieldId: BODY_FIELDS.TARGET_YIELD,
+                    value: processTarget.targetYield
+                });
+
+                log.debug('applyProcessTargetYield', {
+                    processType,
+                    speciesId,
+                    targetYield: processTarget.targetYield,
+                    kerfLoss: processTarget.kerfLoss,
+                    shrinkage: processTarget.shrinkage,
+                    defectRate: processTarget.defectRate
+                });
+            }
+
+        } catch (e) {
+            log.error('applyProcessTargetYield', e);
         }
     };
 
@@ -457,6 +622,7 @@ define([
 
     /**
      * Get yield percentage for a line
+     * Priority: Line Override → Process Target → Item Default → System Default
      *
      * @param {Record} rec - Work Order record
      * @param {number} lineNum - Line number
@@ -473,6 +639,12 @@ define([
 
         if (!isNaN(lineYield) && lineYield > 0 && lineYield <= 100) {
             return lineYield;
+        }
+
+        // Check for work order target yield (from process type)
+        const woTargetYield = parseFloat(rec.getValue({ fieldId: BODY_FIELDS.TARGET_YIELD }));
+        if (!isNaN(woTargetYield) && woTargetYield > 0 && woTargetYield <= 100) {
+            return woTargetYield;
         }
 
         // Fall back to item default or system default

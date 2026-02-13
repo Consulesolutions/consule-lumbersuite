@@ -1,0 +1,32 @@
+<customlist scriptid="customlist_cls_disposition">
+    <name>CLS Disposition</name>
+    <description>Disposition options for by-products</description>
+    <isinactive>F</isinactive>
+    <isordered>T</isordered>
+    <customvalues>
+        <customvalue scriptid="val_inventory">
+            <value>Add to Inventory</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_sell">
+            <value>Sell As-Is</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_reprocess">
+            <value>Reprocess</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_fuel">
+            <value>Use as Fuel</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_mulch">
+            <value>Mulch/Landscape</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_dispose">
+            <value>Dispose/Waste</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+    </customvalues>
+</customlist>

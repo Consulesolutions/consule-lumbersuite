@@ -1,0 +1,40 @@
+<customlist scriptid="customlist_cls_byproduct_type">
+    <name>CLS By-product Type</name>
+    <description>Types of by-products from lumber processing</description>
+    <isinactive>F</isinactive>
+    <isordered>T</isordered>
+    <customvalues>
+        <customvalue scriptid="val_shorts">
+            <value>Shorts/Cutoffs</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_edgings">
+            <value>Edgings/Rippings</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_chips">
+            <value>Chips</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_sawdust">
+            <value>Sawdust</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_shavings">
+            <value>Shavings</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_bark">
+            <value>Bark</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_offcuts">
+            <value>Usable Offcuts</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_downgrade">
+            <value>Downgraded Lumber</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+    </customvalues>
+</customlist>

@@ -54,7 +54,20 @@ define([], () => {
         CONSUMPTION_LOG: 'customrecord_cls_consumption',
         REPACK_ORDER: 'customrecord_cls_repack',
         REPACK_OUTPUT: 'customrecord_cls_repack_out',
-        WASTE_REASON: 'customrecord_cls_waste_rsn'
+        WASTE_REASON: 'customrecord_cls_waste_rsn',
+        // Assembly & Multi-output support
+        BYPRODUCT: 'customrecord_cls_byproduct',
+        PROCESS_TARGET: 'customrecord_cls_process_target'
+    };
+
+    /**
+     * Custom List IDs
+     */
+    const LIST_TYPES = {
+        PROCESS_TYPE: 'customlist_cls_process_type',
+        BYPRODUCT_TYPE: 'customlist_cls_byproduct_type',
+        DISPOSITION: 'customlist_cls_disposition',
+        ASSEMBLY_TYPE: 'customlist_cls_assembly_type'
     };
 
     /**
@@ -82,7 +95,12 @@ define([], () => {
         CONVERSION_LOCKED: 'custbody_cls_conversion_locked',
         LINKED_TALLY: 'custbody_cls_linked_tally',
         TOTAL_THEORETICAL_BF: 'custbody_cls_total_theoretical_bf',
-        TOTAL_WASTE_BF: 'custbody_cls_total_waste_bf'
+        TOTAL_WASTE_BF: 'custbody_cls_total_waste_bf',
+        // Assembly & Multi-output fields
+        PROCESS_TYPE: 'custbody_cls_process_type',
+        ASSEMBLY_TYPE: 'custbody_cls_assembly_type',
+        EXPECTED_BYPRODUCTS: 'custbody_cls_expected_byproducts',
+        TARGET_YIELD: 'custbody_cls_target_yield'
     };
 
     /**
@@ -272,6 +290,89 @@ define([], () => {
         IS_RECOVERABLE: 'custrecord_cls_wrsn_recoverable',
         DEFAULT_RECOVERY_PCT: 'custrecord_cls_wrsn_recovery_pct',
         IS_INACTIVE: 'isinactive'
+    };
+
+    /**
+     * CLS By-product Record Field IDs
+     */
+    const BYPRODUCT_FIELDS = {
+        SOURCE_WO: 'custrecord_cls_byp_source_wo',
+        SOURCE_ITEM: 'custrecord_cls_byp_source_item',
+        OUTPUT_ITEM: 'custrecord_cls_byp_output_item',
+        QUANTITY: 'custrecord_cls_byp_quantity',
+        BOARD_FEET: 'custrecord_cls_byp_bf',
+        TYPE: 'custrecord_cls_byp_type',
+        DISPOSITION: 'custrecord_cls_byp_disposition',
+        CREATED_TALLY: 'custrecord_cls_byp_tally',
+        DATE: 'custrecord_cls_byp_date',
+        LOCATION: 'custrecord_cls_byp_location',
+        NOTES: 'custrecord_cls_byp_notes'
+    };
+
+    /**
+     * CLS Process Target Record Field IDs
+     */
+    const PROCESS_TARGET_FIELDS = {
+        PROCESS_TYPE: 'custrecord_cls_pt_process_type',
+        SPECIES: 'custrecord_cls_pt_species',
+        TARGET_YIELD: 'custrecord_cls_pt_target_yield',
+        MIN_YIELD: 'custrecord_cls_pt_min_yield',
+        KERF_LOSS: 'custrecord_cls_pt_kerf_loss',
+        SHRINKAGE: 'custrecord_cls_pt_shrinkage',
+        DEFECT_RATE: 'custrecord_cls_pt_defect_rate',
+        NOTES: 'custrecord_cls_pt_notes'
+    };
+
+    /**
+     * Process Type Values (from customlist_cls_process_type)
+     */
+    const PROCESS_TYPES = {
+        SURFACING: 'val_surface',
+        RIPPING: 'val_rip',
+        CROSSCUTTING: 'val_crosscut',
+        RESAWING: 'val_resaw',
+        GLUEUP: 'val_glueup',
+        MOULDING: 'val_moulding',
+        KILN_DRYING: 'val_drying',
+        TREATMENT: 'val_treatment'
+    };
+
+    /**
+     * Assembly Type Values (from customlist_cls_assembly_type)
+     */
+    const ASSEMBLY_TYPES = {
+        ROUGH_TO_FINISHED: 'val_rough_finish',
+        CUTTING: 'val_cutting',
+        GLUEUP_PANEL: 'val_glueup',
+        DIMENSION_STOCK: 'val_dimension',
+        REMANUFACTURE: 'val_remanufacture',
+        TREATMENT_DRYING: 'val_treatment'
+    };
+
+    /**
+     * By-product Type Values (from customlist_cls_byproduct_type)
+     */
+    const BYPRODUCT_TYPES = {
+        SHORTS: 'val_shorts',
+        EDGINGS: 'val_edgings',
+        CHIPS: 'val_chips',
+        SAWDUST: 'val_sawdust',
+        SHAVINGS: 'val_shavings',
+        BARK: 'val_bark',
+        OFFCUTS: 'val_offcuts',
+        DOWNGRADE: 'val_downgrade'
+    };
+
+    /**
+     * Disposition Values (from customlist_cls_disposition)
+     */
+    const DISPOSITION_TYPES = {
+        INVENTORY: 'val_inventory',
+        SELL: 'val_sell',
+        REPROCESS: 'val_reprocess',
+        FUEL: 'val_fuel',
+        MULCH: 'val_mulch',
+        DISPOSE: 'val_dispose'
     };
 
     /**
@@ -474,6 +575,7 @@ define([], () => {
 
         // Record Types
         RECORD_TYPES,
+        LIST_TYPES,
 
         // Field Groups
         ITEM_FIELDS,
@@ -490,6 +592,8 @@ define([], () => {
         REPACK_FIELDS,
         REPACK_OUTPUT_FIELDS,
         WASTE_REASON_FIELDS,
+        BYPRODUCT_FIELDS,
+        PROCESS_TARGET_FIELDS,
 
         // Status Values
         TALLY_STATUS,
@@ -498,6 +602,12 @@ define([], () => {
         REPACK_STATUS,
         REPACK_STATUS_LABELS,
         SOURCE_TYPES,
+
+        // Assembly & Multi-output Types
+        PROCESS_TYPES,
+        ASSEMBLY_TYPES,
+        BYPRODUCT_TYPES,
+        DISPOSITION_TYPES,
 
         // Script & Deployment IDs
         SCRIPTS,

@@ -1,0 +1,11 @@
+<custombodyfield scriptid="custbody_cls_target_yield">
+    <label>Target Yield %</label>
+    <description>Target yield percentage for this work order based on process type</description>
+    <fieldtype>PERCENT</fieldtype>
+    <storevalue>T</storevalue>
+    <showinlist>T</showinlist>
+    <isformula>F</isformula>
+    <bodycustomfield>
+        <transactionform>WORKORDER</transactionform>
+    </bodycustomfield>
+</custombodyfield>

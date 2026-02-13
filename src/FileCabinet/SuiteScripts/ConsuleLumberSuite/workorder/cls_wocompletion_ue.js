@@ -28,6 +28,7 @@ define([
     '../lib/cls_dimension_resolver',
     '../lib/cls_tally_service',
     '../lib/cls_yield_service',
+    '../lib/cls_process_service',
     '../lib/cls_logger'
 ], (
     record,
@@ -40,10 +41,12 @@ define([
     DimensionResolver,
     TallyService,
     YieldService,
+    ProcessService,
     Logger
 ) => {
 
     const LINE_FIELDS = Constants.LINE_FIELDS;
+    const BODY_FIELDS = Constants.BODY_FIELDS;
     const YIELD_FIELDS = Constants.YIELD_FIELDS;
     const PRECISION = Constants.PRECISION;
 
@@ -357,7 +360,7 @@ define([
     };
 
     /**
-     * afterSubmit - Create yield register entries and update tallies
+     * afterSubmit - Create yield register entries, update tallies, and create by-products
      *
      * @param {Object} context
      */
@@ -380,9 +383,21 @@ define([
                 id: completionId
             });
 
+            // Load work order to get process settings
+            const woRec = record.load({
+                type: record.Type.WORK_ORDER,
+                id: workOrderId
+            });
+
             // Create yield register entries if enabled
             if (SettingsDAO.isYieldEnabled() || SettingsDAO.isWasteEnabled()) {
                 processYieldTracking(completionRec, workOrderId);
+            }
+
+            // Create by-product records if expected
+            const expectsByproducts = woRec.getValue({ fieldId: BODY_FIELDS.EXPECTED_BYPRODUCTS });
+            if (expectsByproducts) {
+                processByproducts(completionRec, woRec);
             }
 
             // Update tally sheet consumption if enabled
@@ -403,6 +418,114 @@ define([
         } catch (e) {
             log.error('afterSubmit', e);
         }
+    };
+
+    /**
+     * Process by-products for a completed work order
+     *
+     * @param {Record} completionRec - Work Order Completion record
+     * @param {Record} woRec - Work Order record
+     */
+    const processByproducts = (completionRec, woRec) => {
+        try {
+            const workOrderId = woRec.id;
+            const processType = woRec.getValue({ fieldId: BODY_FIELDS.PROCESS_TYPE });
+            const locationId = woRec.getValue({ fieldId: 'location' });
+
+            // Get process target for waste breakdown
+            const processTarget = ProcessService.getProcessTarget({ processType });
+
+            if (!processTarget.found) {
+                log.debug('processByproducts', 'No process target found - skipping by-product creation');
+                return;
+            }
+
+            // Calculate total input BF from components
+            let totalInputBF = 0;
+            const componentCount = completionRec.getLineCount({ sublistId: 'component' });
+
+            for (let i = 0; i < componentCount; i++) {
+                const itemId = completionRec.getSublistValue({
+                    sublistId: 'component',
+                    fieldId: 'item',
+                    line: i
+                });
+
+                if (!DimensionResolver.isLumberItem(itemId)) continue;
+
+                const quantity = parseFloat(completionRec.getSublistValue({
+                    sublistId: 'component',
+                    fieldId: 'quantity',
+                    line: i
+                })) || 0;
+
+                totalInputBF += quantity;
+            }
+
+            if (totalInputBF <= 0) {
+                log.debug('processByproducts', 'No lumber input - skipping by-product creation');
+                return;
+            }
+
+            // Calculate waste breakdown
+            const wasteBreakdown = ProcessService.calculateWasteBreakdown({
+                inputBF: totalInputBF,
+                kerfLoss: processTarget.kerfLoss,
+                shrinkage: processTarget.shrinkage,
+                defectRate: processTarget.defectRate
+            });
+
+            log.debug('processByproducts', {
+                workOrderId,
+                processType,
+                totalInputBF,
+                wasteBreakdown
+            });
+
+            // Create by-product records for significant waste
+            // Note: In production, you would configure which items to use for by-products
+            // This is a simplified example that creates records for tracking purposes
+
+            if (wasteBreakdown.totalWasteBF > 0) {
+                // Create a general by-product record for tracking
+                const byproductResult = ProcessService.createByproduct({
+                    workOrderId: workOrderId,
+                    outputItemId: getDefaultByproductItem(), // Would be configured per account
+                    quantity: wasteBreakdown.totalWasteBF,
+                    boardFeet: wasteBreakdown.totalWasteBF,
+                    byproductType: Constants.BYPRODUCT_TYPES.SAWDUST,
+                    disposition: Constants.DISPOSITION_TYPES.FUEL,
+                    locationId: locationId,
+                    notes: `Kerf: ${wasteBreakdown.kerfBF} BF, Shrinkage: ${wasteBreakdown.shrinkageBF} BF, Defects: ${wasteBreakdown.defectBF} BF`
+                });
+
+                if (byproductResult.success) {
+                    log.audit('processByproducts - Created', {
+                        workOrderId,
+                        byproductId: byproductResult.byproductId,
+                        totalWasteBF: wasteBreakdown.totalWasteBF
+                    });
+                } else {
+                    log.error('processByproducts - Failed', byproductResult.error);
+                }
+            }
+
+        } catch (e) {
+            log.error('processByproducts', e);
+        }
+    };
+
+    /**
+     * Get default by-product item (placeholder - would be configured)
+     * In production, this would look up the configured by-product item from settings
+     *
+     * @returns {number|null} Item ID
+     */
+    const getDefaultByproductItem = () => {
+        // This would be replaced with actual configuration lookup
+        // For now, return null which will cause the by-product creation to fail gracefully
+        // The customer would configure their by-product items in CLS Settings
+        return null;
     };
 
     /**

@@ -1,0 +1,51 @@
+<customrecordtype scriptid="customrecord_cls_process_target">
+    <recordname>CLS Process Target</recordname>
+    <description>Yield and waste targets by process type</description>
+    <isinactive>F</isinactive>
+    <includename>T</includename>
+    <showid>T</showid>
+    <shownotes>T</shownotes>
+    <allowquickadd>T</allowquickadd>
+    <allowquicksearch>T</allowquicksearch>
+    <enablenumbering>F</enablenumbering>
+    <allowinlineediting>T</allowinlineediting>
+    <allowinlinedeleting>F</allowinlinedeleting>
+    <customrecordcustomfields>
+        <customrecordcustomfield scriptid="custrecord_cls_pt_process_type">
+            <label>Process Type</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>[scriptid=customlist_cls_process_type]</selectrecordtype>
+            <ismandatory>T</ismandatory>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_pt_species">
+            <label>Species (Optional)</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>[scriptid=customrecord_cls_species]</selectrecordtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_pt_target_yield">
+            <label>Target Yield %</label>
+            <fieldtype>PERCENT</fieldtype>
+            <ismandatory>T</ismandatory>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_pt_min_yield">
+            <label>Minimum Acceptable Yield %</label>
+            <fieldtype>PERCENT</fieldtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_pt_kerf_loss">
+            <label>Expected Kerf Loss %</label>
+            <fieldtype>PERCENT</fieldtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_pt_shrinkage">
+            <label>Expected Shrinkage %</label>
+            <fieldtype>PERCENT</fieldtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_pt_defect_rate">
+            <label>Expected Defect Rate %</label>
+            <fieldtype>PERCENT</fieldtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_pt_notes">
+            <label>Notes</label>
+            <fieldtype>TEXTAREA</fieldtype>
+        </customrecordcustomfield>
+    </customrecordcustomfields>
+</customrecordtype>

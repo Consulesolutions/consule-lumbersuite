@@ -1,0 +1,72 @@
+<customrecordtype scriptid="customrecord_cls_byproduct">
+    <recordname>CLS By-product</recordname>
+    <description>Tracks by-products and usable waste from manufacturing</description>
+    <isinactive>F</isinactive>
+    <includename>F</includename>
+    <showid>T</showid>
+    <shownotes>T</shownotes>
+    <allowquickadd>F</allowquickadd>
+    <allowquicksearch>T</allowquicksearch>
+    <enablenumbering>T</enablenumbering>
+    <numberingprefix>BYP-</numberingprefix>
+    <numberingmindigits>6</numberingmindigits>
+    <allowinlineediting>F</allowinlineediting>
+    <allowinlinedeleting>F</allowinlinedeleting>
+    <customrecordcustomfields>
+        <customrecordcustomfield scriptid="custrecord_cls_byp_source_wo">
+            <label>Source Work Order</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>-30</selectrecordtype>
+            <ismandatory>T</ismandatory>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_byp_source_item">
+            <label>Source Item</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>-10</selectrecordtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_byp_output_item">
+            <label>By-product Item</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>-10</selectrecordtype>
+            <ismandatory>T</ismandatory>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_byp_quantity">
+            <label>Quantity</label>
+            <fieldtype>FLOAT</fieldtype>
+            <ismandatory>T</ismandatory>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_byp_bf">
+            <label>Board Feet</label>
+            <fieldtype>FLOAT</fieldtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_byp_type">
+            <label>By-product Type</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>[scriptid=customlist_cls_byproduct_type]</selectrecordtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_byp_disposition">
+            <label>Disposition</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>[scriptid=customlist_cls_disposition]</selectrecordtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_byp_tally">
+            <label>Created Tally</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>[scriptid=customrecord_cls_tally]</selectrecordtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_byp_date">
+            <label>Date</label>
+            <fieldtype>DATE</fieldtype>
+            <ismandatory>T</ismandatory>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_byp_location">
+            <label>Location</label>
+            <fieldtype>SELECT</fieldtype>
+            <selectrecordtype>-103</selectrecordtype>
+        </customrecordcustomfield>
+        <customrecordcustomfield scriptid="custrecord_cls_byp_notes">
+            <label>Notes</label>
+            <fieldtype>TEXTAREA</fieldtype>
+        </customrecordcustomfield>
+    </customrecordcustomfields>
+</customrecordtype>

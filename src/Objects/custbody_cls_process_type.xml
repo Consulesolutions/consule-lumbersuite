@@ -1,0 +1,12 @@
+<custombodyfield scriptid="custbody_cls_process_type">
+    <label>Process Type</label>
+    <description>Manufacturing process type for this work order</description>
+    <fieldtype>SELECT</fieldtype>
+    <selectrecordtype>[scriptid=customlist_cls_process_type]</selectrecordtype>
+    <storevalue>T</storevalue>
+    <showinlist>T</showinlist>
+    <isformula>F</isformula>
+    <bodycustomfield>
+        <transactionform>WORKORDER</transactionform>
+    </bodycustomfield>
+</custombodyfield>

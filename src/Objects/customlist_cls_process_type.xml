@@ -1,0 +1,40 @@
+<customlist scriptid="customlist_cls_process_type">
+    <name>CLS Process Type</name>
+    <description>Manufacturing process types for lumber operations</description>
+    <isinactive>F</isinactive>
+    <isordered>T</isordered>
+    <customvalues>
+        <customvalue scriptid="val_surface">
+            <value>Surfacing (S2S/S4S)</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_rip">
+            <value>Ripping</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_crosscut">
+            <value>Crosscutting</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_resaw">
+            <value>Resawing</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_glueup">
+            <value>Glue-up/Lamination</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_moulding">
+            <value>Moulding/Shaping</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_drying">
+            <value>Kiln Drying</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_treatment">
+            <value>Treatment/Finishing</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+    </customvalues>
+</customlist>

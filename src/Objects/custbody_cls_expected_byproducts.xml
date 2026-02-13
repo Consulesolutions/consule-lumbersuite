@@ -1,0 +1,12 @@
+<custombodyfield scriptid="custbody_cls_expected_byproducts">
+    <label>Expected By-products</label>
+    <description>Indicates if by-products are expected from this work order</description>
+    <fieldtype>CHECKBOX</fieldtype>
+    <storevalue>T</storevalue>
+    <showinlist>F</showinlist>
+    <isformula>F</isformula>
+    <defaultchecked>F</defaultchecked>
+    <bodycustomfield>
+        <transactionform>WORKORDER</transactionform>
+    </bodycustomfield>
+</custombodyfield>

@@ -1,0 +1,32 @@
+<customlist scriptid="customlist_cls_assembly_type">
+    <name>CLS Assembly Type</name>
+    <description>Types of lumber assembly operations</description>
+    <isinactive>F</isinactive>
+    <isordered>T</isordered>
+    <customvalues>
+        <customvalue scriptid="val_rough_finish">
+            <value>Rough to Finished</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_cutting">
+            <value>Cutting/Ripping</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_glueup">
+            <value>Glue-up/Panel</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_dimension">
+            <value>Dimension Stock</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_remanufacture">
+            <value>Remanufacture</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+        <customvalue scriptid="val_treatment">
+            <value>Treatment/Drying</value>
+            <isinactive>F</isinactive>
+        </customvalue>
+    </customvalues>
+</customlist>
